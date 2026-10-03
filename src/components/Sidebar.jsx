@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  LayoutDashboard, 
   MonitorPlay, 
   Search, 
   Settings, 
@@ -16,7 +15,6 @@ import {
 import clsx from 'clsx';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', active: false },
   { icon: MonitorPlay, label: 'Website Audit', active: false },
   { icon: Search, label: 'Keyword Research', active: false },
   { icon: Settings, label: 'Technical SEO', active: false },

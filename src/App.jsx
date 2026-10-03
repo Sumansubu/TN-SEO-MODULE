@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import Dashboard from './components/Dashboard';
+import CompetitorAnalysis from './components/CompetitorAnalysis';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          <Dashboard />
+          <CompetitorAnalysis />
         </main>
       </div>
     </div>

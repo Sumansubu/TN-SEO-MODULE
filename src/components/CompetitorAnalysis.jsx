@@ -44,7 +44,7 @@ const categoriesData = [
   { category: 'News > Broadcast & Network News', nike: '1.3K', adidas: '1.1K', highest: 'nike' },
 ];
 
-export default function Dashboard() {
+export default function CompetitorAnalysis() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showChart1Menu, setShowChart1Menu] = useState(false);
