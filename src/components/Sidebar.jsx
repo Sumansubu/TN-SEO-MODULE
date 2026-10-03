@@ -161,18 +161,8 @@ export default function Sidebar({ items }) {
                 </div>
 
                 <div className="flex flex-1 flex-col">
-<<<<<<< HEAD
                     <strong className="truncate text-[10px]">{userName}</strong>
                     <span className="mt-0.5 text-[9px] text-emerald-100/70">{SIDEBAR_USER.plan}</span>
-=======
-                    <strong className="text-[10px]">
-                        {SIDEBAR_USER.name}
-                    </strong>
-
-                    <span className="mt-0.5 text-[9px] text-emerald-100/70">
-                        {SIDEBAR_USER.plan}
-                    </span>
->>>>>>> 176f0957f084bf337c58e53e39744d71b69e4c26
                 </div>
 
                 <ArrowRight className="h-3.5 w-3.5" />
