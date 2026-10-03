@@ -3,7 +3,10 @@
 @theme {
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-    /* Brand palette (shared design tokens) */
+    /* =========================================
+       GitHub project brand palette
+    ========================================= */
+
     --color-sidebar: #003d32;
     --color-primary: #079b61;
     --color-primary-dark: #006f49;
@@ -13,11 +16,107 @@
     --color-muted: #667085;
     --color-line: #ccd6d4;
 
-    /* Darker faint divider so inner row/section borders read clearly */
+    /* Darker faint divider */
     --color-gray-100: #e2e7e8;
 
-    /* Stronger default elevation so every card/div reads clearly */
-    --shadow-xs: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.08);
-    --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.07), 0 2px 6px rgb(16 24 40 / 0.10);
-    --shadow-md: 0 2px 4px rgb(16 24 40 / 0.07), 0 6px 16px rgb(16 24 40 / 0.12);
+    /* Default elevation */
+    --shadow-xs:
+        0 1px 2px rgb(16 24 40 / 0.06),
+        0 1px 3px rgb(16 24 40 / 0.08);
+
+    --shadow-sm:
+        0 1px 2px rgb(16 24 40 / 0.07),
+        0 2px 6px rgb(16 24 40 / 0.10);
+
+    --shadow-md:
+        0 2px 4px rgb(16 24 40 / 0.07),
+        0 6px 16px rgb(16 24 40 / 0.12);
+}
+
+/* =========================================
+   Global variables used by integrated
+   Content Writer + Technical SEO components
+========================================= */
+
+:root {
+    /* Page */
+    --page-bg: #f4f8f7;
+    --card-bg: #ffffff;
+    --soft-bg: #f8fbfa;
+
+    /* Sidebar */
+    --sidebar-bg: #003b35;
+    --sidebar-bg-dark: #002f2b;
+
+    /* Text */
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    /* Borders */
+    --border-color: #e3ebe8;
+
+    /* Primary */
+    --primary: #059669;
+    --primary-dark: #047857;
+    --primary-light: #ecfdf5;
+
+    /* Status */
+    --success: #059669;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+}
+
+/* =========================================
+   BODY
+========================================= */
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+
+    font-family: var(--font-sans);
+
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   Shared application cards
+========================================= */
+
+@layer components {
+    .app-card {
+        @apply rounded-xl border bg-white;
+
+        border-color: var(--border-color);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.025);
+    }
+
+    .app-card-soft {
+        @apply rounded-xl border;
+
+        background-color: var(--soft-bg);
+        border-color: var(--border-color);
+    }
+}
+
+/* =========================================
+   Utilities
+========================================= */
+
+@layer utilities {
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
 }

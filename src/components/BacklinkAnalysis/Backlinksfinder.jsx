@@ -1654,45 +1654,12 @@ export default function BacklinksFinder({
       <div className="max-w-[1280px] mx-auto space-y-3.5">
 
         {/* ========================================================
-            TOP BAR
+            DOMAIN SEARCH
+            This remains inside the normal Backlinks page.
+            It is not added to the main Layout navbar.
         ======================================================== */}
 
         <div className="flex items-center gap-3">
-
-          {/* Mobile menu */}
-
-          <button
-            type="button"
-            onClick={onMenuClick}
-            className="lg:hidden h-9 w-9 shrink-0 rounded-lg border border-gray-200 bg-white text-gray-600 grid place-items-center hover:bg-gray-50 hover:text-green-700 transition"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          {/* ====================================================
-              HOME BUTTON
-          ==================================================== */}
-
-          <button
-            type="button"
-            onClick={goHome}
-            title="Home"
-            aria-label="Home"
-            className="h-9 w-9 shrink-0 rounded-lg border border-gray-200 bg-white text-gray-600 grid place-items-center hover:bg-gray-50 hover:text-green-700 transition"
-          >
-            <HomeIcon className="w-4 h-4" />
-          </button>
-
-          {/* Search */}
-
           <div className="flex flex-1 max-w-[470px] bg-white border border-gray-200 rounded-lg overflow-hidden h-9">
             <input
               value={domainInput}
@@ -1720,40 +1687,6 @@ export default function BacklinksFinder({
 
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-          </div>
-
-          {/* Right side */}
-
-          <div className="ml-auto flex items-center gap-4">
-
-            {/* Notification */}
-
-            <div className="relative text-gray-700">
-              <BellIcon className="w-5 h-5" />
-
-              <span className="absolute -top-0.5 right-0 w-2 h-2 rounded-full bg-red-500 border border-white" />
-            </div>
-
-            {/* User */}
-
-            <div
-              className="w-9 h-9 rounded-full text-white grid place-items-center text-[15px] font-bold"
-              style={{
-                background: GD,
-              }}
-            >
-              U
-            </div>
-
-            <div className="hidden sm:block text-[13px] leading-tight">
-              <div className="text-gray-500">
-                Good Evening,
-              </div>
-
-              <div className="font-bold text-gray-900 text-[14px]">
-                Utsav 👋
-              </div>
-            </div>
           </div>
         </div>
 

@@ -964,35 +964,17 @@ export default function RankTracking() {
             />
           </button>
 
-          <div className="flex h-8 flex-1 items-center rounded-lg border border-gray-200 bg-white px-3 text-[10px] text-gray-500">
-            Enter a domain or keyword to track (e.g. example.com)
-          </div>
-
-          <button className="h-8 rounded-lg bg-green-700 px-4 text-[11px] font-semibold text-white">
-            Track Rankings →
-          </button>
-
-          <div className="relative ml-24">
-            <span className="text-lg">
-              🔔
-            </span>
-
-            <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-red-500" />
-          </div>
-
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white">
-            U
-          </div>
-
-          <div className="text-[11px] leading-tight">
-            <div className="text-gray-600">
-              Good Evening,
+          {/* SEARCH + TRACK CONTAINER */}
+          <div className="flex w-fit max-w-[620px] shrink-0 items-center">
+            <div className="flex h-8 w-[360px] items-center rounded-l-lg border border-r-0 border-gray-200 bg-white px-3 text-[10px] text-gray-500">
+              Enter a domain or keyword to track (e.g. example.com)
             </div>
 
-            <div className="text-[13px] font-bold">
-              Utsav 👋
-            </div>
+            <button className="h-8 shrink-0 rounded-r-lg bg-green-700 px-4 text-[11px] font-semibold text-white">
+              Track Rankings →
+            </button>
           </div>
+
         </div>
 
         {/* ---------- Page heading ---------- */}

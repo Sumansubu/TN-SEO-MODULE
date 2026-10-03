@@ -28,10 +28,32 @@ const ICONS = {
     sparkles: Sparkles,
     "file-bar-chart": FileBarChart,
     settings: Settings,
+
+    // Rank Tracking icon
+    "rank-tracking": Search,
 };
 
 export default function Sidebar({ items }) {
     const navigate = useNavigate();
+
+    // Add Rank Tracking immediately after Backlink Analysis
+    // if it is not already present in NAV_ITEMS.
+    const navItems = [];
+
+    items.forEach((item) => {
+        navItems.push(item);
+
+        if (
+            item.label === "Backlink Analysis" &&
+            !items.some((navItem) => navItem.label === "Rank Tracking")
+        ) {
+            navItems.push({
+                label: "Rank Tracking",
+                icon: "rank-tracking",
+                to: "/rank-tracking",
+            });
+        }
+    });
 
     return (
         <aside className="fixed inset-y-0 left-0 z-40 flex w-[172px] min-w-[172px] flex-col bg-sidebar text-white">
@@ -39,13 +61,18 @@ export default function Sidebar({ items }) {
             {/* BRAND */}
             <div className="flex h-[67px] items-center border-b border-white/10 px-4">
                 <div className="mr-2 flex h-9 w-9 items-center justify-center rounded-full bg-mint text-primary-dark">
-                    <ArrowUpRight className="h-5 w-5" strokeWidth={2.4} />
+                    <ArrowUpRight
+                        className="h-5 w-5"
+                        strokeWidth={2.4}
+                    />
                 </div>
 
                 <div>
                     <h2 className="text-[13px] leading-4 tracking-wide">
                         {BRAND.name}
-                        <span className="text-[8px]">{BRAND.suffix}</span>
+                        <span className="text-[8px]">
+                            {BRAND.suffix}
+                        </span>
                     </h2>
 
                     <p className="mt-0.5 text-[8px] tracking-[2px] text-emerald-100/70">
@@ -56,13 +83,16 @@ export default function Sidebar({ items }) {
 
             {/* NAVIGATION */}
             <nav className="flex-1 overflow-y-auto p-2.5">
-                {items.map(({ to, label, icon, end }) => {
+                {navItems.map(({ to, label, icon, end }) => {
 
-                    // FIX:
-                    // If Backlink Analysis does not have a "to" value
-                    // in site.js, automatically use /backlinks.
+                    // Navigation paths
                     const resolvedTo =
-                        to || (label === "Backlink Analysis" ? "/backlinks" : null);
+                        to ||
+                        (label === "Backlink Analysis"
+                            ? "/backlinks"
+                            : label === "Rank Tracking"
+                                ? "/rank-tracking"
+                                : null);
 
                     return resolvedTo ? (
                         <NavLink
@@ -112,6 +142,7 @@ export default function Sidebar({ items }) {
                     className="mt-2.5 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#13b76d] text-[11px] font-semibold text-white transition hover:bg-primary-dark"
                 >
                     {SIDEBAR_UPGRADE.cta}
+
                     <ArrowRight className="h-3.5 w-3.5" />
                 </button>
             </div>
@@ -143,6 +174,9 @@ function renderIcon(name) {
     const Icon = ICONS[name];
 
     return Icon ? (
-        <Icon className="h-4 w-4" strokeWidth={1.8} />
+        <Icon
+            className="h-4 w-4"
+            strokeWidth={1.8}
+        />
     ) : null;
 }
