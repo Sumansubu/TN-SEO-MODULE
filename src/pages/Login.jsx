@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../context/useAuth.js";
 import dashboardImage from "../assets/final dashboard.png";
 
 /* =========================
@@ -216,7 +218,14 @@ function AppleIcon() {
 ========================= */
 
 function Login() {
-  const [isSignup, setIsSignup] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { login, register } = useAuth();
+
+  const [isSignup, setIsSignup] = useState(
+    searchParams.get("mode") === "signup"
+  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -234,6 +243,21 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [notice] = useState(
+    location.state?.from ? "Please log in to continue." : ""
+  );
+  const [success, setSuccess] = useState(
+    location.state?.loggedOut ? "You have been logged out successfully." : ""
+  );
+
+  /* Where to go after authenticating (deep link, otherwise dashboard). */
+  const destination = (() => {
+    const from = location.state?.from;
+    return from && !from.startsWith("/login") ? from : "/dashboard";
+  })();
+
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
   /* =========================
      FORM CHANGE
@@ -248,6 +272,7 @@ function Login() {
     }));
 
     setError("");
+    setSuccess("");
   };
 
   /* =========================
@@ -258,58 +283,33 @@ function Login() {
     event.preventDefault();
 
     setError("");
+    setSuccess("");
 
-    if (!formData.email || !formData.password) {
+    const email = formData.email.trim();
+
+    if (!email || !formData.password) {
       setError("Please enter your email and password.");
+      return;
+    }
+
+    if (!EMAIL_PATTERN.test(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
     try {
       setLoading(true);
 
-      const API_URL =
-        import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email: formData.email.trim(),
-          password: formData.password,
-        }),
+      await login({
+        email,
+        password: formData.password,
+        rememberMe,
       });
 
-      const contentType = response.headers.get("content-type") || "";
-      const data = contentType.includes("application/json")
-        ? await response.json()
-        : {};
-
-      if (!response.ok) {
-        setError(
-          data.error ||
-            data.message ||
-            "Invalid email or password."
-        );
-        return;
-      }
-
-      if (data.token) {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem("token", data.token);
-      }
-
-      if (data.user) {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem("user", JSON.stringify(data.user));
-      }
-
-      window.location.href = "/dashboard";
-    } catch (error) {
+      navigate(destination, { replace: true });
+    } catch (err) {
       setError(
-        "Unable to connect to the server. Please make sure the backend is running."
+        err?.message || "Invalid email or password."
       );
     } finally {
       setLoading(false);
@@ -324,19 +324,25 @@ function Login() {
     event.preventDefault();
 
     setError("");
+    setSuccess("");
 
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+
+    if (!name || !email || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!EMAIL_PATTERN.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!PASSWORD_PATTERN.test(formData.password)) {
+      setError(
+        "Password must be at least 8 characters and include at least one letter and one number."
+      );
       return;
     }
 
@@ -353,63 +359,17 @@ function Login() {
     try {
       setLoading(true);
 
-      const API_URL =
-        import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          password: formData.password,
-        }),
+      await register({
+        fullName: name,
+        email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
       });
 
-      const contentType = response.headers.get("content-type") || "";
-      const data = contentType.includes("application/json")
-        ? await response.json()
-        : {};
-
-      if (!response.ok) {
-        setError(
-          data.error ||
-            data.message ||
-            "Unable to create your account."
-        );
-        return;
-      }
-
-      if (data.token) {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem("token", data.token);
-
-        if (data.user) {
-          storage.setItem("user", JSON.stringify(data.user));
-        }
-
-        window.location.href = "/dashboard";
-        return;
-      }
-
-      setIsSignup(false);
-
-      setFormData({
-        name: "",
-        email: formData.email,
-        password: "",
-        confirmPassword: "",
-      });
-
+      navigate(destination, { replace: true });
+    } catch (err) {
       setError(
-        "Account created successfully. Please sign in."
-      );
-    } catch (error) {
-      setError(
-        "Unable to connect to the server. Please make sure the backend is running."
+        err?.message || "Unable to create your account. Please try again."
       );
     } finally {
       setLoading(false);
@@ -423,6 +383,11 @@ function Login() {
   const switchMode = (signupMode) => {
     setIsSignup(signupMode);
     setError("");
+    setSuccess("");
+
+    if (searchParams.get("mode")) {
+      setSearchParams({}, { replace: true });
+    }
   };
 
   return (
@@ -449,9 +414,7 @@ function Login() {
 
             <button
               type="button"
-              onClick={() => {
-                window.location.href = "/";
-              }}
+              onClick={() => navigate("/")}
               className="mb-12 flex items-center gap-3 text-left"
             >
               <LogoIcon />
@@ -670,9 +633,30 @@ function Login() {
                 ERROR
             ========================= */}
 
+            {notice && !error && !success && (
+              <div
+                role="status"
+                className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-[13px] text-emerald-700"
+              >
+                {notice}
+              </div>
+            )}
+
             {error && (
-              <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600">
+              <div
+                role="alert"
+                className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600"
+              >
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div
+                role="status"
+                className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-[13px] text-emerald-700"
+              >
+                {success}
               </div>
             )}
 
@@ -684,6 +668,7 @@ function Login() {
               onSubmit={
                 isSignup ? handleSignup : handleLogin
               }
+              aria-busy={loading}
             >
 
               {/* NAME - ONLY SIGNUP */}

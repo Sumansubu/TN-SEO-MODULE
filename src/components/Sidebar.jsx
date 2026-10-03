@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth.js";
 import {
     ArrowRight,
     ArrowUpRight,
@@ -32,6 +33,12 @@ const ICONS = {
 
 export default function Sidebar({ items }) {
     const navigate = useNavigate();
+    const { user } = useAuth();
+
+    const userName = user?.fullName || SIDEBAR_USER.name;
+    const userAvatar = user
+        ? user.fullName.trim().charAt(0).toUpperCase()
+        : SIDEBAR_USER.avatarLetter;
 
     return (
         <aside className="fixed inset-y-0 left-0 z-40 flex w-[172px] min-w-[172px] flex-col bg-sidebar text-white">
@@ -102,10 +109,10 @@ export default function Sidebar({ items }) {
             {/* USER */}
             <div className="flex h-16 items-center border-t border-white/10 px-2.5">
                 <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full border border-emerald-400/70 bg-[#073e35] text-[11px]">
-                    {SIDEBAR_USER.avatarLetter}
+                    {userAvatar}
                 </div>
                 <div className="flex flex-1 flex-col">
-                    <strong className="text-[10px]">{SIDEBAR_USER.name}</strong>
+                    <strong className="truncate text-[10px]">{userName}</strong>
                     <span className="mt-0.5 text-[9px] text-emerald-100/70">{SIDEBAR_USER.plan}</span>
                 </div>
                 <ArrowRight className="h-3.5 w-3.5" />

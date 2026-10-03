@@ -10,7 +10,7 @@ export const BRAND = {
 };
 
 export const NAV_ITEMS = [
-  { to: "/", label: "Dashboard", icon: "home", end: true },
+    { to: "/dashboard", label: "Dashboard", icon: "home", end: true },
   { to: null, label: "Website Audit", icon: "clipboard-check" },
   { to: null, label: "Keyword Research", icon: "search" },
 
