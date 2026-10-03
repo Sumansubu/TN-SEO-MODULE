@@ -1,20 +1,21 @@
-import { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import CompetitorAnalysis from './components/CompetitorAnalysis';
+import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import CompetitorAnalysis from "./pages/CompetitorAnalysis.jsx";
+import OnPageSeo from "./pages/OnPageSeo.jsx";
+import Upgrade from "./pages/Upgrade.jsx";
 
-function App() {
-  return (
-    <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          <CompetitorAnalysis />
-        </main>
-      </div>
-    </div>
-  );
+export default function App() {
+    return (
+        <Routes>
+            <Route element={<Layout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/on-page-seo" element={<OnPageSeo />} />
+                <Route path="/competitor-analysis" element={<CompetitorAnalysis />} />
+                <Route path="/upgrade" element={<Upgrade />} />
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+    );
 }
-
-export default App;

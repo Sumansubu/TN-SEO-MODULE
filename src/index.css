@@ -1,13 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-900 antialiased font-sans;
-  }
-}
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-.recharts-default-tooltip {
-  @apply rounded-lg shadow-sm border border-gray-100 !important;
+    /* Brand palette (shared design tokens) */
+    --color-sidebar: #003d32;
+    --color-primary: #079b61;
+    --color-primary-dark: #006f49;
+    --color-mint: #e9f9f2;
+    --color-page: #eef2f3;
+    --color-ink: #101828;
+    --color-muted: #667085;
+    --color-line: #ccd6d4;
+
+    /* Darker faint divider so inner row/section borders read clearly */
+    --color-gray-100: #e2e7e8;
+
+    /* Stronger default elevation so every card/div reads clearly */
+    --shadow-xs: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.08);
+    --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.07), 0 2px 6px rgb(16 24 40 / 0.10);
+    --shadow-md: 0 2px 4px rgb(16 24 40 / 0.07), 0 6px 16px rgb(16 24 40 / 0.12);
 }
