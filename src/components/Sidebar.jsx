@@ -66,7 +66,11 @@ export default function Sidebar({ items }) {
         <aside className="fixed inset-y-0 left-0 z-40 flex w-[172px] min-w-[172px] flex-col bg-sidebar text-white">
 
             {/* BRAND */}
-            <div className="flex h-[67px] items-center border-b border-white/10 px-4">
+            <NavLink
+                to="/"
+                title="Back to home"
+                className="flex h-[67px] items-center border-b border-white/10 px-4 transition-opacity hover:opacity-80"
+            >
                 <div className="mr-2 flex h-9 w-9 items-center justify-center rounded-full bg-mint text-primary-dark">
                     <ArrowUpRight
                         className="h-5 w-5"
@@ -86,7 +90,7 @@ export default function Sidebar({ items }) {
                         {BRAND.module}
                     </p>
                 </div>
-            </div>
+            </NavLink>
 
             {/* NAVIGATION */}
             <nav className="flex-1 overflow-y-auto p-2.5">

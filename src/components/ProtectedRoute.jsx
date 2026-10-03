@@ -44,7 +44,7 @@ export function GuestOnlyRoute() {
 
     if (isAuthenticated) {
         const from = location.state?.from;
-        const safeFrom = from && !from.startsWith("/login") ? from : "/dashboard";
+        const safeFrom = from && !from.startsWith("/login") ? from : "/";
         return <Navigate to={safeFrom} replace />;
     }
 

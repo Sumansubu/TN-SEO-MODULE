@@ -250,10 +250,10 @@ function Login() {
     location.state?.loggedOut ? "You have been logged out successfully." : ""
   );
 
-  /* Where to go after authenticating (deep link, otherwise dashboard). */
+  /* Where to go after authenticating (deep link, otherwise landing page). */
   const destination = (() => {
     const from = location.state?.from;
-    return from && !from.startsWith("/login") ? from : "/dashboard";
+    return from && !from.startsWith("/login") ? from : "/";
   })();
 
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
