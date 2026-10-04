@@ -1,0 +1,206 @@
+/* =====================================================
+   Styles for the integrated Projects / Reports /
+   Settings pages. Class-scoped only (no global element
+   rules) so existing TN SEO Module pages are untouched.
+===================================================== */
+
+/* Poppins (Projects page font) */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* ===============================
+   PROJECTS PAGE
+================================ */
+.projects-root {
+  font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+.modal-enter {
+  animation: modal-enter 180ms ease-out;
+}
+
+.toast-enter {
+  animation: toast-enter 200ms ease-out;
+}
+
+@keyframes modal-enter {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-enter {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ===============================
+   REPORTS PAGE
+   (brand logo + keyword sparkline)
+================================ */
+.brand-mark {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #39bd76;
+  color: #003b35;
+  position: relative;
+}
+
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px solid #003b35;
+  border-radius: 50%;
+}
+
+.brand-mark svg {
+  transform: rotate(-45deg);
+  position: relative;
+  z-index: 1;
+}
+
+.report-mark {
+  width: 38px;
+  height: 38px;
+}
+
+.sparkline {
+  width: 90px;
+  height: 26px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 2px 3px;
+  background: linear-gradient(
+    180deg,
+    transparent 0 48%,
+    rgba(16, 185, 129, 0.08) 49% 100%
+  );
+}
+
+.sparkline i {
+  display: block;
+  width: 12px;
+  border-top: 2px solid #10a66a;
+  transform: skewY(-14deg);
+}
+
+.sparkline i:nth-child(1) {
+  height: 7px;
+}
+
+.sparkline i:nth-child(2) {
+  height: 12px;
+}
+
+.sparkline i:nth-child(3) {
+  height: 9px;
+}
+
+.sparkline i:nth-child(4) {
+  height: 11px;
+}
+
+.sparkline i:nth-child(5) {
+  height: 17px;
+}
+
+.sparkline i:nth-child(6) {
+  height: 22px;
+}
+
+@media (max-width: 639px) {
+  .sparkline {
+    width: 60px;
+  }
+
+  .sparkline i {
+    width: 8px;
+  }
+}
+
+/* ===============================
+   SETTINGS PAGE
+   (logo, security banner, sidebar)
+================================ */
+.logo-ring {
+  position: relative;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background: #32bd72;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-ring::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid #003b35;
+  border-radius: 50%;
+}
+
+.logo-arrow {
+  width: 25px;
+  height: 25px;
+  color: #003b35;
+  position: relative;
+  z-index: 2;
+}
+
+.security-banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.security-banner::before,
+.security-banner::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.security-banner::before {
+  width: 330px;
+  height: 180px;
+  right: 60px;
+  bottom: -125px;
+  border: 2px solid rgba(16, 169, 104, 0.1);
+}
+
+.security-banner::after {
+  width: 440px;
+  height: 230px;
+  right: -100px;
+  bottom: -160px;
+  border: 2px solid rgba(16, 169, 104, 0.09);
+}
+
+@media (max-width: 767px) {
+  .desktop-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .desktop-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+}

@@ -16,6 +16,14 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 
 // ==============================
+// Integrated pages (added)
+// Projects / SEO Reports / Settings
+// ==============================
+import Projects from "./pages/Projects.jsx";
+import Reports from "./pages/Reports.jsx";
+import Settings from "./pages/Settings.jsx";
+
+// ==============================
 // Content / AI Writer
 // ==============================
 import ContentAIWriter from "./pages/ContentAIWriter.jsx";
@@ -208,6 +216,13 @@ export default function App() {
 
                 </Route>
             </Route>
+
+            {/* ==========================================
+                INTEGRATED: PROJECTS / REPORTS / SETTINGS
+            =========================================== */}
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/settings" element={<Settings />} />
 
             <Route path="/landing" element={<Navigate to="/" replace />} />
 
