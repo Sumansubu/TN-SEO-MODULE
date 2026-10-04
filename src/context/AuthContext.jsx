@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./authContext.js";
-import { getCurrentUser, loginUser, logoutUser, registerUser } from "../services/authService.js";
+import {
+    getCurrentUser,
+    googleSignIn,
+    loginUser,
+    logoutUser,
+    registerUser,
+} from "../services/authService.js";
 
 /**
  * Single source of truth for authentication state across the app.
@@ -41,6 +47,12 @@ export function AuthProvider({ children }) {
         return data;
     }, []);
 
+    const signInWithGoogle = useCallback(async (credential) => {
+        const data = await googleSignIn(credential);
+        setUser(data.user);
+        return data;
+    }, []);
+
     const logout = useCallback(async () => {
         try {
             await logoutUser();
@@ -56,9 +68,10 @@ export function AuthProvider({ children }) {
             loading,
             login,
             register,
+            signInWithGoogle,
             logout,
         }),
-        [user, loading, login, register, logout]
+        [user, loading, login, register, signInWithGoogle, logout]
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,6 +1,15 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
-import { register, login, logout, me } from "../controllers/authController.js";
+import {
+    register,
+    login,
+    logout,
+    me,
+    googleConfig,
+    googleLogin,
+    forgotPassword,
+    resetPassword,
+} from "../controllers/authController.js";
 import { optionalAuth } from "../middleware/authMiddleware.js";
 
 /** Basic protection against credential-stuffing / brute force attempts. */
@@ -18,5 +27,11 @@ router.post("/register", authLimiter, register);
 router.post("/login", authLimiter, login);
 router.post("/logout", logout);
 router.get("/me", optionalAuth, me);
+
+router.get("/google/config", googleConfig);
+router.post("/google", authLimiter, googleLogin);
+
+router.post("/forgot-password", authLimiter, forgotPassword);
+router.post("/reset-password", authLimiter, resetPassword);
 
 export default router;

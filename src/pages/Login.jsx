@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
+import { getGoogleConfig } from "../services/authService.js";
 import dashboardImage from "../assets/final dashboard.png";
 
 /* =========================
@@ -221,7 +222,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { login, register } = useAuth();
+  const { login, register, signInWithGoogle } = useAuth();
 
   const [isSignup, setIsSignup] = useState(
     searchParams.get("mode") === "signup"
@@ -247,7 +248,8 @@ function Login() {
     location.state?.from ? "Please log in to continue." : ""
   );
   const [success, setSuccess] = useState(
-    location.state?.loggedOut ? "You have been logged out successfully." : ""
+    location.state?.success ||
+      (location.state?.loggedOut ? "You have been logged out successfully." : "")
   );
 
   /* Where to go after authenticating (deep link, otherwise landing page). */
@@ -258,6 +260,104 @@ function Login() {
 
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+  /* =========================
+     GOOGLE SIGN-IN (Google Identity Services)
+  ========================= */
+
+  const googleBtnRef = useRef(null);
+  const googleCallbackRef = useRef(null);
+  const [googleState, setGoogleState] = useState("loading"); // loading | ready | unavailable
+
+  const handleGoogleCredential = async (response) => {
+    if (!response?.credential) return;
+
+    setError("");
+    setSuccess("");
+
+    try {
+      setLoading(true);
+      await signInWithGoogle(response.credential);
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(err?.message || "Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    googleCallbackRef.current = handleGoogleCredential;
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadGsiScript = () =>
+      new Promise((resolve, reject) => {
+        if (window.google?.accounts?.id) return resolve();
+        const existing = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+        if (existing) {
+          existing.addEventListener("load", resolve, { once: true });
+          existing.addEventListener("error", reject, { once: true });
+          return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+
+    (async () => {
+      try {
+        const config = await getGoogleConfig();
+        if (cancelled) return;
+
+        if (!config?.enabled || !config.clientId) {
+          setGoogleState("unavailable");
+          return;
+        }
+
+        await loadGsiScript();
+        if (cancelled || !window.google?.accounts?.id) {
+          if (!cancelled) setGoogleState("unavailable");
+          return;
+        }
+
+        window.google.accounts.id.initialize({
+          client_id: config.clientId,
+          callback: (credentialResponse) =>
+            googleCallbackRef.current?.(credentialResponse),
+        });
+
+        setGoogleState("ready");
+      } catch {
+        if (!cancelled) setGoogleState("unavailable");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (googleState !== "ready" || !googleBtnRef.current || !window.google?.accounts?.id) {
+      return;
+    }
+
+    const container = googleBtnRef.current;
+    container.innerHTML = "";
+    window.google.accounts.id.renderButton(container, {
+      theme: "outline",
+      size: "large",
+      text: "continue_with",
+      width: Math.min(400, Math.max(240, container.clientWidth || 320)),
+    });
+  }, [googleState]);
 
   /* =========================
      FORM CHANGE
@@ -392,13 +492,13 @@ function Login() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#f5faf8] text-[#10212b]">
-      <div className="grid min-h-screen lg:grid-cols-[55%_45%]">
+      <div className="grid min-h-screen lg:h-screen lg:grid-cols-[55%_45%]">
 
         {/* =========================
             LEFT SIDE
         ========================= */}
 
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#f7fcfa] via-[#effaf5] to-[#dff7eb] px-7 py-8 sm:px-10 lg:px-14 xl:px-20">
+        <section className="relative order-2 overflow-hidden bg-gradient-to-br from-[#f7fcfa] via-[#effaf5] to-[#dff7eb] px-7 py-8 sm:px-10 lg:order-none lg:h-screen lg:overflow-y-auto lg:px-14 xl:px-20">
 
           {/* Background shapes */}
 
@@ -509,7 +609,7 @@ function Login() {
             RIGHT SIDE
         ========================= */}
 
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f7faf9] px-5 py-10 sm:px-8">
+        <section className="relative order-1 flex min-h-screen items-start justify-center overflow-hidden bg-[#f7faf9] px-5 py-10 sm:px-8 lg:order-none lg:h-screen lg:min-h-0 lg:overflow-y-auto">
 
           {/* Background shapes */}
 
@@ -517,9 +617,33 @@ function Login() {
 
           <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full border-[50px] border-[#e6f8ef]" />
 
-          {/* Card */}
+          {/* Form column - centered without clipping on short screens */}
+          <div className="relative z-10 m-auto w-full max-w-[520px]">
 
-          <div className="relative z-10 w-full max-w-[520px] rounded-[17px] border border-[#e6ebe9] bg-white px-7 py-7 shadow-[0_12px_45px_rgba(25,65,50,0.07)] sm:px-10 sm:py-9">
+            {/* Brand - small screens only (the form comes first there) */}
+
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="mb-7 flex items-center gap-3 text-left lg:hidden"
+            >
+              <LogoIcon />
+
+              <div>
+                <div className="text-[22px] font-extrabold leading-none tracking-[-1.2px] text-[#111820]">
+                  TN SEO
+                  <sup className="ml-0.5 text-[8px]">®</sup>
+                </div>
+
+                <div className="mt-1 text-[10px] font-medium tracking-wide text-[#3c4245]">
+                  Smarter SEO. Bigger Growth.
+                </div>
+              </div>
+            </button>
+
+            {/* Card */}
+
+            <div className="relative rounded-[17px] border border-[#e6ebe9] bg-white px-7 py-7 shadow-[0_12px_45px_rgba(25,65,50,0.07)] sm:px-10 sm:py-9">
 
             {/* =========================
                 TABS
@@ -587,18 +711,27 @@ function Login() {
 
             <div className="space-y-2.5">
 
-              <button
-                type="button"
-                onClick={() => {
-                  alert(
-                    "Google authentication will be connected later."
-                  );
-                }}
-                className="flex h-[47px] w-full items-center justify-center gap-3 rounded-[7px] border border-[#dfe4e2] bg-white text-[14px] font-medium text-[#273038] transition hover:bg-[#f8faf9]"
-              >
-                <GoogleIcon />
-                Continue with Google
-              </button>
+              {googleState === "ready" ? (
+                <div
+                  ref={googleBtnRef}
+                  className="flex min-h-[47px] w-full items-center justify-center"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setError(
+                      googleState === "loading"
+                        ? "Google sign-in is still loading. Please try again in a moment."
+                        : "Google sign-in is not configured yet. Set GOOGLE_CLIENT_ID in server/.env and restart the server."
+                    );
+                  }}
+                  className="flex h-[47px] w-full items-center justify-center gap-3 rounded-[7px] border border-[#dfe4e2] bg-white text-[14px] font-medium text-[#273038] transition hover:bg-[#f8faf9]"
+                >
+                  <GoogleIcon />
+                  Continue with Google
+                </button>
+              )}
 
               <button
                 type="button"
@@ -751,11 +884,7 @@ function Login() {
                   {!isSignup && (
                     <button
                       type="button"
-                      onClick={() => {
-                        alert(
-                          "Password reset functionality will be connected later."
-                        );
-                      }}
+                      onClick={() => navigate("/forgot-password")}
                       className="text-[12px] font-semibold text-[#15945d] hover:text-[#087b48]"
                     >
                       Forgot password?
@@ -984,6 +1113,8 @@ function Login() {
               </div>
 
             </div>
+
+          </div>
 
           </div>
         </section>

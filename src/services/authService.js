@@ -59,3 +59,22 @@ export function logoutUser() {
 export function getCurrentUser() {
     return request("/auth/me");
 }
+
+export function getGoogleConfig() {
+    return request("/auth/google/config");
+}
+
+export function googleSignIn(credential) {
+    return request("/auth/google", { method: "POST", body: { credential } });
+}
+
+export function forgotPassword(email) {
+    return request("/auth/forgot-password", { method: "POST", body: { email } });
+}
+
+export function resetPassword({ token, password, confirmPassword }) {
+    return request("/auth/reset-password", {
+        method: "POST",
+        body: { token, password, confirmPassword },
+    });
+}

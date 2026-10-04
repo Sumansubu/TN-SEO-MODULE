@@ -21,8 +21,32 @@ const userSchema = new mongoose.Schema(
         },
         passwordHash: {
             type: String,
-            required: true,
+            required: function () {
+                return !this.googleId; // Google accounts have no local password
+            },
             select: false, // never returned unless explicitly requested
+        },
+        googleId: {
+            type: String,
+            unique: true,
+            sparse: true, // local-only users have no googleId
+        },
+        avatar: {
+            type: String,
+            default: "",
+        },
+        authProvider: {
+            type: String,
+            enum: ["local", "google"],
+            default: "local",
+        },
+        passwordResetTokenHash: {
+            type: String,
+            select: false,
+        },
+        passwordResetExpires: {
+            type: Date,
+            select: false,
         },
     },
     { timestamps: true } // adds createdAt + updatedAt
@@ -34,6 +58,8 @@ userSchema.methods.toPublic = function () {
         id: this._id.toString(),
         fullName: this.fullName,
         email: this.email,
+        avatar: this.avatar || "",
+        authProvider: this.authProvider || "local",
         createdAt: this.createdAt,
     };
 };

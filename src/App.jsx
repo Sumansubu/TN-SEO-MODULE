@@ -12,6 +12,8 @@ import OnPageSeo from "./pages/OnPageSeo.jsx";
 import Upgrade from "./pages/Upgrade.jsx";
 import LandingPage from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 // ==============================
 // Content / AI Writer
@@ -50,8 +52,10 @@ export default function App() {
         <Routes>
             {/* Public */}
             <Route path="/" element={<LandingPage />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route element={<GuestOnlyRoute />}>
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
             </Route>
 
             {/* ==========================================
