@@ -24,6 +24,12 @@ import Reports from "./pages/Reports.jsx";
 import Settings from "./pages/Settings.jsx";
 
 // ==============================
+// Website Audit / Keyword Research
+// ==============================
+import WebsiteAudit from "./pages/websiteAudit.jsx";
+import KeywordResearch from "./pages/keywordResearch.jsx";
+
+// ==============================
 // Content / AI Writer
 // ==============================
 import ContentAIWriter from "./pages/ContentAIWriter.jsx";
@@ -218,11 +224,16 @@ export default function App() {
             </Route>
 
             {/* ==========================================
-                INTEGRATED: PROJECTS / REPORTS / SETTINGS
+                STANDALONE PAGES (own sidebar shell, login required)
+                Projects / Reports / Settings / Website Audit / Keyword Research
             =========================================== */}
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route element={<ProtectedRoute />}>
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/website-audit" element={<WebsiteAudit />} />
+                <Route path="/keyword-research" element={<KeywordResearch />} />
+            </Route>
 
             <Route path="/landing" element={<Navigate to="/" replace />} />
 

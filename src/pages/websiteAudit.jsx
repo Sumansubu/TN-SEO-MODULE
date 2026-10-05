@@ -652,14 +652,14 @@ function Sidebar({ active }) {
     ["Dashboard", "home", "/"],
     ["Website Audit", "audit", "/website-audit"],
     ["Keyword Research", "search", "/keyword-research"],
-    ["Technical SEO", "technical"],
-    ["Content / AI Writer", "content"],
-    ["On-Page SEO", "page"],
-    ["Backlink Analysis", "link"],
-    ["Rank Tracking", "rank"],
-    ["Competitor Analysis", "competitor"],
-    ["Reports", "report"],
-    ["Settings", "settings"],
+    ["Technical SEO", "technical", "/technical-seo"],
+    ["Content / AI Writer", "content", "/content"],
+    ["On-Page SEO", "page", "/on-page-seo"],
+    ["Backlink Analysis", "link", "/backlinks"],
+    ["Rank Tracking", "rank", "/rank-tracking"],
+    ["Competitor Analysis", "competitor", "/competitor-analysis"],
+    ["Reports", "report", "/reports"],
+    ["Settings", "settings", "/settings"],
   ];
 
   const user = getLoggedInUser();

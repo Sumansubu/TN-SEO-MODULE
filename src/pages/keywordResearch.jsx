@@ -304,6 +304,14 @@ function Sidebar({ active }) {
       Dashboard: "/",
       "Website Audit": "/website-audit",
       "Keyword Research": "/keyword-research",
+      "Technical SEO": "/technical-seo",
+      "Content / AI Writer": "/content",
+      "On-Page SEO": "/on-page-seo",
+      "Backlink Analysis": "/backlinks",
+      "Rank Tracking": "/rank-tracking",
+      "Competitor Analysis": "/competitor-analysis",
+      Reports: "/reports",
+      Settings: "/settings",
     };
 
     if (routes[label]) {

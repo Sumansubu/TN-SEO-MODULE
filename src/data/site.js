@@ -11,8 +11,8 @@ export const BRAND = {
 
 export const NAV_ITEMS = [
     { to: "/dashboard", label: "Dashboard", icon: "home", end: true },
-  { to: null, label: "Website Audit", icon: "clipboard-check" },
-  { to: null, label: "Keyword Research", icon: "search" },
+  { to: "/website-audit", label: "Website Audit", icon: "clipboard-check" },
+  { to: "/keyword-research", label: "Keyword Research", icon: "search" },
 
   // Technical SEO
   { to: "/technical-seo", label: "Technical SEO", icon: "settings-2" },
@@ -25,8 +25,8 @@ export const NAV_ITEMS = [
   { to: "/content", label: "Content / AI Writer", icon: "file-text" },
 
   { to: null, label: "AI Recommendations", icon: "sparkles" },
-  { to: null, label: "Reports", icon: "file-bar-chart" },
-  { to: null, label: "Settings", icon: "settings" },
+  { to: "/reports", label: "Reports", icon: "file-bar-chart" },
+  { to: "/settings", label: "Settings", icon: "settings" },
 ];
 
 export const SIDEBAR_UPGRADE = {
