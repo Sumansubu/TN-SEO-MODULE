@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 let memoryServer = null;
 
 export async function connectDB() {
-    const uri = process.env.MONGO_URI;
+    let uri = process.env.MONGO_URI || process.env.MONGODB_URI;
     let mongoUri = uri;
 
     if (!mongoUri) {
@@ -30,11 +30,18 @@ export async function connectDB() {
 
         memoryServer = await MongoMemoryServer.create();
         mongoUri = memoryServer.getUri("tn-seo");
-        console.log("[db] MONGO_URI not set - using an in-memory MongoDB (development only).");
+        console.warn("[db] WARNING: MONGO_URI not set - using an in-memory MongoDB (data resets on restart!).");
+    } else {
+        const cleanUri = mongoUri.split("?")[0];
+        if (cleanUri.endsWith(".mongodb.net")) {
+            mongoUri = mongoUri.replace(".mongodb.net", ".mongodb.net/tn-seo");
+        } else if (cleanUri.endsWith(".mongodb.net/")) {
+            mongoUri = mongoUri.replace(".mongodb.net/", ".mongodb.net/tn-seo");
+        }
     }
 
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 10000 });
-    console.log("[db] MongoDB connected");
+    console.log("[db] MongoDB connected successfully");
 
     return memoryServer;
 }

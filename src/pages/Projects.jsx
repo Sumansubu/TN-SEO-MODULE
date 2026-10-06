@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AppSidebar from '../components/AppSidebar';
 import '../styles/tn-seo-pages.css';
 
 const favoriteStyles = [
@@ -187,7 +186,6 @@ function ProjectModal({ onClose, onCreate }) {
 
 export default function Projects() {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [projects, setProjects] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -228,41 +226,8 @@ export default function Projects() {
 
   return (
     <>
-      <AppSidebar
-        mobileOpen={sidebarOpen}
-        setMobileOpen={setSidebarOpen}
-        onSelect={(label) => showToast(`${label} selected`)}
-      />
-
-      <div className="projects-root min-h-screen bg-[#f4f7f5] text-slate-900 lg:pl-[228px]">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1500px] flex-col">
-        <header className="sticky top-0 z-30 flex min-h-[62px] items-center gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-7">
-          <button
-            type="button"
-            aria-label="Open menu"
-            onClick={() => setSidebarOpen(true)}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-200 text-slate-700 transition hover:border-green-400 hover:text-green-700 lg:hidden"
-          >
-            <Icon className="h-4 w-4"><path d="M4 6h16M4 12h16M4 18h16" /></Icon>
-          </button>
-          <button
-            type="button"
-            onClick={() => showToast('Returning to Home')}
-            className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-800 shadow-sm transition hover:border-green-500 hover:text-green-700"
-          >
-            <Icon className="h-3.5 w-3.5"><path d="M19 12H5M12 19l-7-7 7-7" /></Icon>
-            Back to Home
-          </button>
-          <div className="ml-auto flex items-center gap-3 sm:gap-4">
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-green-400 to-green-800 text-sm font-bold text-white">N</div>
-            <div className="hidden leading-tight sm:block">
-              <b className="block text-xs font-semibold">Good Evening,</b>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-green-600">New Guest</span>
-            </div>
-            <Icon className="h-3.5 w-3.5 text-slate-400"><path d="m6 9 6 6 6-6" /></Icon>
-          </div>
-        </header>
-
+      <div className="projects-root text-slate-900">
+      <div className="mx-auto flex w-full max-w-[1500px] flex-col">
         <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 pb-10 pt-6 sm:px-7 sm:pt-8">
           <section className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-[220px] flex-1">

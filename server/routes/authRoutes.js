@@ -12,10 +12,10 @@ import {
 } from "../controllers/authController.js";
 import { optionalAuth } from "../middleware/authMiddleware.js";
 
-/** Basic protection against credential-stuffing / brute force attempts. */
+const isDev = process.env.NODE_ENV !== "production";
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 50,
+    limit: isDev ? 1000 : 50,
     standardHeaders: "draft-7",
     legacyHeaders: false,
     message: { success: false, message: "Too many attempts. Please try again in a few minutes." },

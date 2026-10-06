@@ -1,26 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { resetPassword } from "../services/authService.js";
+import BrandMark from "../components/BrandLogo.jsx";
 
 const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
-
-function LogoIcon() {
-    return (
-        <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
-            <circle cx="21" cy="21" r="18" stroke="#16A66A" strokeWidth="3" />
-            <path d="M12 28L29 11" stroke="#16A66A" strokeWidth="3" strokeLinecap="round" />
-            <path
-                d="M22 11H29V18"
-                stroke="#16A66A"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path d="M13 17C15 13.5 18 11.5 21 11" stroke="#16A66A" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M12 24C12 27 14 29 17 30" stroke="#16A66A" strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
-    );
-}
 
 function LockIcon() {
     return (
@@ -83,7 +66,7 @@ export default function ResetPassword() {
                     onClick={() => navigate("/")}
                     className="mb-7 flex items-center gap-3 text-left"
                 >
-                    <LogoIcon />
+                    <BrandMark size={42} />
 
                     <div>
                         <div className="text-[22px] font-extrabold leading-none tracking-[-1.2px] text-[#111820]">

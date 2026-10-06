@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
+import BrandMark from "../components/BrandLogo.jsx";
 import dashboardImage from "../assets/final dashboard.png";
 
 // ============================================================
@@ -234,24 +235,7 @@ const GridIcon = () => (
 
 const Logo = () => (
     <a href="#home" className="flex items-center gap-2.5">
-        <div className="relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-emerald-500">
-            <div className="absolute h-5 w-5 rounded-full border border-emerald-500" />
-
-            <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#059669"
-                strokeWidth="2.3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="relative z-10"
-            >
-                <path d="M4 17 9 12l3 3 8-9" />
-                <path d="M15 6h5v5" />
-            </svg>
-        </div>
+        <BrandMark size={36} className="shrink-0" />
 
         <div className="leading-none">
             <div className="text-[17px] font-bold tracking-tight text-slate-900">
@@ -259,7 +243,7 @@ const Logo = () => (
                 <sup className="ml-0.5 text-[7px]">®</sup>
             </div>
 
-            <div className="mt-1 text-[7px] font-medium text-slate-500">
+            <div className="mt-1 text-[9px] font-semibold tracking-wide text-slate-500">
                 Smarter SEO. Bigger Growth.
             </div>
         </div>
@@ -414,6 +398,8 @@ const LandingPage = () => {
 
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
+    const [activeTab, setActiveTab] = useState("Home");
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     /* "Start Free Trial" - signed-in users skip the login page. */
     const startFreeTrial = () => {
@@ -503,64 +489,132 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="min-h-screen overflow-hidden bg-white text-slate-900">
+        <div className="min-h-screen overflow-hidden bg-white pt-[62px] text-slate-900">
 
             {/* ======================================================
           NAVBAR
       ====================================================== */}
 
-            <nav className="relative z-50 border-b border-slate-100 bg-white">
+            <nav className="fixed left-0 right-0 top-0 z-50 border-b border-slate-100 bg-white shadow-sm">
                 <div className="mx-auto flex h-[62px] max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8">
 
                     <Logo />
 
                     {/* Desktop navigation */}
                     <div className="hidden items-center gap-7 md:flex">
-                        {navigation.map(([name, link], index) => (
-                            <a
-                                key={name}
-                                href={link}
-                                className={`relative py-5 text-[10px] font-medium ${index === 0
-                                        ? "text-slate-900"
-                                        : "text-slate-600 hover:text-emerald-600"
-                                    }`}
-                            >
-                                {name}
+                        {navigation.map(([name, link]) => {
+                            const active = activeTab === name;
 
-                                {index === 0 && (
-                                    <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-emerald-600" />
-                                )}
-                            </a>
-                        ))}
+                            return (
+                                <a
+                                    key={name}
+                                    href={link}
+                                    onClick={() => setActiveTab(name)}
+                                    className={`relative py-5 text-[13px] font-semibold tracking-[0.01em] transition-colors ${active
+                                            ? "text-slate-900"
+                                            : "text-slate-600 hover:text-emerald-600"
+                                        }`}
+                                >
+                                    {name}
+
+                                    {active && (
+                                        <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-emerald-600" />
+                                    )}
+                                </a>
+                            );
+                        })}
                     </div>
 
                     {/* Buttons */}
                     <div className="hidden items-center gap-3 md:flex">
-                        <button
-                            type="button"
-                            onClick={() => navigate("/login")}
-                            className="rounded-md border border-slate-400 bg-white px-4 py-2 text-[10px] font-semibold text-slate-800 transition hover:border-emerald-500 hover:text-emerald-600"
-                        >
-                            Sign In
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate("/login?mode=signup")}
-                            className="rounded-md bg-emerald-600 px-5 py-2.5 text-[10px] font-semibold text-white transition hover:bg-emerald-700"
-                        >
-                            Get Started Free
-                        </button>
+                        {isAuthenticated ? (
+                            <button type="button" onClick={() => navigate("/dashboard")} className="cursor-pointer rounded-md bg-emerald-600 px-5 py-2.5 text-[12px] font-semibold text-white transition hover:bg-emerald-700">Go to Dashboard</button>
+                        ) : (
+                            <>
+                                <button type="button" onClick={() => navigate("/login")} className="cursor-pointer rounded-md border border-slate-400 bg-white px-4 py-2 text-[12px] font-semibold text-slate-800 transition hover:border-emerald-500 hover:text-emerald-600">Sign In</button>
+                                <button type="button" onClick={() => navigate("/login?mode=signup")} className="cursor-pointer rounded-md bg-emerald-600 px-5 py-2.5 text-[12px] font-semibold text-white transition hover:bg-emerald-700">Get Started Free</button>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile menu */}
-                    <button className="flex flex-col gap-1 rounded-md border border-slate-200 p-2 md:hidden">
-                        <span className="h-[2px] w-4 bg-slate-700" />
-                        <span className="h-[2px] w-4 bg-slate-700" />
-                        <span className="h-[2px] w-4 bg-slate-700" />
+                    <button
+                        type="button"
+                        aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={mobileOpen}
+                        onClick={() => setMobileOpen((open) => !open)}
+                        className="flex h-9 w-9 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-slate-200 md:hidden"
+                    >
+                        {mobileOpen ? (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-slate-700">
+                                <path d="M18 6 6 18M6 6l12 12" />
+                            </svg>
+                        ) : (
+                            <>
+                                <span className="h-[2px] w-4 bg-slate-700" />
+                                <span className="h-[2px] w-4 bg-slate-700" />
+                                <span className="h-[2px] w-4 bg-slate-700" />
+                            </>
+                        )}
                     </button>
 
                 </div>
+
+                {/* Mobile dropdown */}
+                {mobileOpen && (
+                    <div className="border-t border-slate-100 bg-white px-5 py-4 shadow-md md:hidden">
+                        <div className="flex flex-col gap-1">
+                            {navigation.map(([name, link]) => {
+                                const active = activeTab === name;
+
+                                return (
+                                    <a
+                                        key={name}
+                                        href={link}
+                                        onClick={() => {
+                                            setActiveTab(name);
+                                            setMobileOpen(false);
+                                        }}
+                                        className={`relative rounded-md px-3 py-2.5 text-[14px] font-semibold transition-colors ${active
+                                                ? "text-slate-900"
+                                                : "text-slate-600 hover:text-emerald-600"
+                                            }`}
+                                    >
+                                        {name}
+
+                                        {active && (
+                                            <span className="absolute bottom-0.5 left-3 h-[2px] w-[calc(100%-24px)] rounded-full bg-emerald-600" />
+                                        )}
+                                    </a>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-3 flex flex-col gap-2.5 border-t border-slate-100 pt-4">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    navigate("/login");
+                                }}
+                                className="cursor-pointer rounded-md border border-slate-400 bg-white px-4 py-2.5 text-[13px] font-semibold text-slate-800 transition hover:border-emerald-500 hover:text-emerald-600"
+                            >
+                                Sign In
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    navigate("/login?mode=signup");
+                                }}
+                                className="cursor-pointer rounded-md bg-emerald-600 px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-emerald-700"
+                            >
+                                Get Started Free
+                            </button>
+                        </div>
+                    </div>
+                )}
             </nav>
 
 
@@ -570,7 +624,7 @@ const LandingPage = () => {
 
             <section
                 id="home"
-                className="relative overflow-hidden bg-[#f5fffb]"
+                className="relative scroll-mt-[62px] overflow-hidden bg-[#f5fffb]"
             >
 
                 {/* Background glow */}
@@ -681,7 +735,7 @@ const LandingPage = () => {
           FEATURES
       ====================================================== */}
 
-            <section id="features" className="bg-white py-10 sm:py-12">
+                <section id="features" className="scroll-mt-[76px] bg-white py-10 sm:py-12">
                 <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
 
                     <div className="mx-auto max-w-2xl text-center">
@@ -820,7 +874,7 @@ const LandingPage = () => {
           HOW IT WORKS
       ====================================================== */}
 
-            <section id="solutions" className="bg-white py-9 sm:py-10">
+                <section id="solutions" className="scroll-mt-[76px] bg-white py-9 sm:py-10">
                 <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
 
                     <div className="text-center">
@@ -837,7 +891,7 @@ const LandingPage = () => {
 
 
                     {/* Steps */}
-                    <div className="mt-7 grid items-center gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+                    <div className="mt-7 grid items-center gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
 
                         {/* Step 1 */}
                         <div className="flex h-[58px] items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 shadow-sm">
@@ -864,7 +918,7 @@ const LandingPage = () => {
 
 
                         {/* Arrow */}
-                        <div className="hidden text-[20px] font-light text-slate-300 md:block">
+                        <div className="hidden text-[20px] font-light text-slate-300 lg:block">
                             →
                         </div>
 
@@ -894,7 +948,7 @@ const LandingPage = () => {
 
 
                         {/* Arrow */}
-                        <div className="hidden text-[20px] font-light text-slate-300 md:block">
+                        <div className="hidden text-[20px] font-light text-slate-300 lg:block">
                             →
                         </div>
 
@@ -924,7 +978,7 @@ const LandingPage = () => {
 
 
                         {/* Arrow */}
-                        <div className="hidden text-[20px] font-light text-slate-300 md:block">
+                        <div className="hidden text-[20px] font-light text-slate-300 lg:block">
                             →
                         </div>
 
@@ -1119,7 +1173,7 @@ const LandingPage = () => {
           TESTIMONIALS
       ====================================================== */}
 
-            <section className="bg-white py-8">
+            <section id="about" className="scroll-mt-[76px] bg-white py-8">
                 <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
 
                     <div className="text-center">

@@ -56,8 +56,8 @@ export async function register(req, res, next) {
     try {
         const fullName = (req.body.fullName || "").trim();
         const email = (req.body.email || "").trim().toLowerCase();
-        const password = req.body.password || "";
-        const confirmPassword = req.body.confirmPassword || "";
+        const password = (req.body.password || "").trim();
+        const confirmPassword = (req.body.confirmPassword || "").trim();
 
         if (!fullName || !email || !password || !confirmPassword) {
             return badRequest(res, "Please fill in all fields.");
@@ -106,7 +106,7 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
     try {
         const email = (req.body.email || "").trim().toLowerCase();
-        const password = req.body.password || "";
+        const password = (req.body.password || "").trim();
         const rememberMe = req.body.rememberMe !== false;
 
         if (!email || !password) {
@@ -115,10 +115,10 @@ export async function login(req, res, next) {
 
         const user = await User.findOne({ email }).select("+passwordHash");
 
-        // Same message for "no user" and "wrong password" - avoids user enumeration.
+        // Same message for "no user", "no password", and "wrong password" - avoids user enumeration.
         const invalid = () => res.status(401).json({ success: false, message: "Invalid email or password." });
 
-        if (!user) return invalid();
+        if (!user || !user.passwordHash) return invalid();
 
         const matches = await bcrypt.compare(password, user.passwordHash);
         if (!matches) return invalid();
@@ -284,8 +284,8 @@ export async function forgotPassword(req, res, next) {
 export async function resetPassword(req, res, next) {
     try {
         const token = req.body?.token || "";
-        const password = req.body?.password || "";
-        const confirmPassword = req.body?.confirmPassword || password;
+        const password = (req.body?.password || "").trim();
+        const confirmPassword = (req.body?.confirmPassword || "").trim() || password;
 
         if (!token) return badRequest(res, "Reset link is invalid or has expired.");
 

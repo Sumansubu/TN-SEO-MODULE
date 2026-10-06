@@ -574,148 +574,6 @@ function Icon({
    LOGO
 ========================================================= */
 
-function Logo() {
-  return (
-    <div className="flex items-center gap-2.5">
-      <div className="flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-[#08A66B] text-[#08A66B]">
-        <span className="text-[16px] font-black leading-none">
-          ↗
-        </span>
-      </div>
-
-      <div>
-        <div className="text-[13px] font-extrabold leading-none tracking-wide text-white">
-          TN SEO
-          <sup className="text-[6px]">®</sup>
-        </div>
-
-        <div className="mt-1 text-[7px] font-semibold tracking-[2.5px] text-white">
-          MODULE
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   USER
-========================================================= */
-
-function getLoggedInUser() {
-  let user = null;
-
-  try {
-    const localUser = JSON.parse(
-      localStorage.getItem("user") || "null"
-    );
-
-    const sessionUser = JSON.parse(
-      sessionStorage.getItem("user") || "null"
-    );
-
-    user = localUser || sessionUser;
-  } catch {
-    user = null;
-  }
-
-  const name =
-    user?.name ||
-    user?.username ||
-    user?.fullName ||
-    "Utsav Kishore";
-
-  const firstName = name.split(" ")[0];
-
-  const initials = name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-
-  return {
-    name,
-    firstName,
-    initials: initials || "U",
-  };
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-function Sidebar({ active }) {
-  const items = [
-    ["Dashboard", "home", "/"],
-    ["Website Audit", "audit", "/website-audit"],
-    ["Keyword Research", "search", "/keyword-research"],
-    ["Technical SEO", "technical", "/technical-seo"],
-    ["Content / AI Writer", "content", "/content"],
-    ["On-Page SEO", "page", "/on-page-seo"],
-    ["Backlink Analysis", "link", "/backlinks"],
-    ["Rank Tracking", "rank", "/rank-tracking"],
-    ["Competitor Analysis", "competitor", "/competitor-analysis"],
-    ["Reports", "report", "/reports"],
-    ["Settings", "settings", "/settings"],
-  ];
-
-  const user = getLoggedInUser();
-
-  return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-[184px] bg-[#003E35] lg:block">
-
-      {/* Logo */}
-      <div className="flex h-[72px] items-center px-4">
-        <Logo />
-      </div>
-
-      {/* Navigation */}
-      <nav className="px-2.5 pt-1">
-
-        {items.map(([label, icon, route]) => {
-          const selected = active === label;
-
-          return (
-            <button
-              key={label}
-              type="button"
-              onClick={() => {
-                if (route) {
-                  window.location.href = route;
-                }
-              }}
-              className={`mb-0.5 flex h-[31px] w-full items-center gap-2.5 rounded-md px-3 text-left text-[10px] transition ${
-                selected
-                  ? "bg-[#08A66B] font-semibold text-white"
-                  : "text-white/85 hover:bg-white/10"
-              }`}
-            >
-              <span
-                className={
-                  selected
-                    ? "text-white"
-                    : "text-white/80"
-                }
-              >
-                <Icon name={icon} size={14} />
-              </span>
-
-              <span className="truncate">
-                {label}
-              </span>
-            </button>
-          );
-        })}
-
-      </nav>
-    </aside>
-  );
-}
-
-
 /* =========================================================
    TOP BAR
 ========================================================= */
@@ -725,13 +583,8 @@ function TopBar({
   setUrl,
   onRunAudit,
 }) {
-  const [showNotifications, setShowNotifications] =
-    useState(false);
-
-  const user = getLoggedInUser();
-
   return (
-    <header className="sticky top-0 z-30 h-[57px] border-b border-[#E5E9E7] bg-white lg:ml-[184px]">
+    <header className="sticky top-0 z-30 h-[57px] border-b border-[#E5E9E7] bg-white">
 
       <div className="flex h-full items-center gap-3 px-4">
 
@@ -747,7 +600,7 @@ function TopBar({
             onChange={(e) =>
               setUrl(e.target.value)
             }
-            className="ml-2 w-full bg-transparent text-[9px] text-[#263D36] outline-none"
+            className="ml-2 w-full bg-transparent text-[12px] text-[#263D36] outline-none"
             aria-label="Website URL"
             placeholder="https://example.com"
           />
@@ -757,7 +610,7 @@ function TopBar({
         <button
           type="button"
           onClick={onRunAudit}
-          className="flex h-8 items-center gap-1.5 rounded-md bg-[#08A66B] px-3.5 text-[9px] font-semibold text-white hover:bg-[#07945F]"
+          className="flex h-8 items-center gap-1.5 rounded-md bg-[#08A66B] px-3.5 text-[12px] font-semibold text-white hover:bg-[#07945F]"
         >
           Run Audit
           <Icon
@@ -765,80 +618,6 @@ function TopBar({
             size={12}
           />
         </button>
-
-        <div className="ml-auto flex items-center gap-3">
-
-          {/* Notification */}
-          <div className="relative">
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowNotifications(
-                  (value) => !value
-                )
-              }
-              className="relative flex h-8 w-8 items-center justify-center rounded-md text-[#263B36] hover:bg-[#F2F6F4]"
-            >
-              <Icon
-                name="bell"
-                size={17}
-              />
-
-              <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#E54B4B]" />
-            </button>
-
-            {showNotifications && (
-              <div className="absolute right-0 top-10 z-50 w-64 overflow-hidden rounded-lg border border-[#DFE6E3] bg-white shadow-xl">
-
-                <div className="border-b border-[#EDF0EF] px-3 py-2 text-[10px] font-bold text-[#243831]">
-                  Notifications
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowNotifications(false)
-                  }
-                  className="block w-full px-3 py-2 text-left text-[9px] text-[#596C65] hover:bg-[#F8FAF9]"
-                >
-                  Your latest website audit is ready.
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowNotifications(false)
-                  }
-                  className="block w-full px-3 py-2 text-left text-[9px] text-[#596C65] hover:bg-[#F8FAF9]"
-                >
-                  New keyword opportunities are ready to review.
-                </button>
-
-              </div>
-            )}
-          </div>
-
-          {/* Profile */}
-          <div className="flex items-center gap-2">
-
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#003E35] text-[10px] font-bold text-white">
-              {user.initials}
-            </div>
-
-            <div className="hidden leading-3.5 sm:block">
-              <div className="text-[8px] text-[#71807A]">
-                Good Evening,
-              </div>
-
-              <div className="text-[9px] font-bold text-[#263B36]">
-                {user.firstName} 👋
-              </div>
-            </div>
-
-          </div>
-        </div>
-
       </div>
     </header>
   );
@@ -903,11 +682,11 @@ function ScoreRing({
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
 
-        <span className="text-[25px] font-bold text-[#15221F]">
+        <span className="text-[27px] font-bold text-[#15221F]">
           {score}
         </span>
 
-        <span className="text-[7px] font-bold text-[#07945F]">
+        <span className="text-[10px] font-bold text-[#07945F]">
           Excellent
         </span>
 
@@ -961,7 +740,7 @@ function TinyRing({ score }) {
         />
       </svg>
 
-      <span className="absolute inset-0 flex items-center justify-center text-[7px] font-bold text-[#31433E]">
+      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[#31433E]">
         {score}
       </span>
 
@@ -1005,11 +784,11 @@ function StatCard({
 
         <div className="min-w-0">
 
-          <div className="text-[14px] font-bold leading-none text-[#16231F]">
+          <div className="text-[15px] font-bold leading-none text-[#16231F]">
             {value}
           </div>
 
-          <div className="mt-1 text-[8px] leading-3 text-[#60716B]">
+          <div className="mt-1 text-[11px] leading-4 text-[#60716B]">
             {label}
           </div>
 
@@ -1018,7 +797,7 @@ function StatCard({
       </div>
 
       {change && (
-        <div className="mt-1.5 text-[8px] font-semibold text-[#07945F]">
+        <div className="mt-1.5 text-[11px] font-semibold text-[#07945F]">
           {change}
         </div>
       )}
@@ -1124,11 +903,11 @@ function TrendChart() {
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 pt-3 sm:px-4 sm:pt-3.5">
 
         <div>
-          <div className="text-[9px] font-semibold text-[#40534C] sm:text-[10px]">
+          <div className="text-[12px] font-semibold text-[#40534C] sm:text-[13px]">
             SEO Health Trend
           </div>
 
-          <div className="mt-0.5 text-[7px] text-[#8A9893] sm:text-[8px]">
+          <div className="mt-0.5 text-[10px] text-[#8A9893] sm:text-[11px]">
             Website health score over time
           </div>
         </div>
@@ -1147,14 +926,14 @@ function TrendChart() {
             border-[#DDE6E2]
             bg-white
             px-2
-            text-[7px]
+            text-[10px]
             font-medium
             text-[#53655E]
             outline-none
             transition
             hover:border-[#BFD8CD]
             focus:border-[#08A66B]
-            sm:text-[8px]
+            sm:text-[11px]
           "
         >
           <option>Last 30 days</option>
@@ -1234,7 +1013,7 @@ function TrendChart() {
                 <text
                   x="4"
                   y={y + 3}
-                  fontSize="7"
+                  fontSize="10"
                   fill="#98A49F"
                 >
                   {score}
@@ -1324,7 +1103,7 @@ function TrendChart() {
             /*
               Keep tooltip inside chart boundaries.
             */
-            const tooltipWidth = 82;
+            const tooltipWidth = 88;
 
             let tooltipX = cx - tooltipWidth / 2;
 
@@ -1370,7 +1149,7 @@ function TrendChart() {
                 <text
                   x={tooltipX + 8}
                   y={tooltipY + 12}
-                  fontSize="7"
+                  fontSize="10"
                   fill="#B8D8CF"
                 >
                   {item.date}
@@ -1379,7 +1158,7 @@ function TrendChart() {
                 <text
                   x={tooltipX + 8}
                   y={tooltipY + 24}
-                  fontSize="9"
+                  fontSize="10"
                   fontWeight="700"
                   fill="#FFFFFF"
                 >
@@ -1412,7 +1191,7 @@ function TrendChart() {
                 x={getX(index)}
                 y={height - 10}
                 textAnchor="middle"
-                fontSize="7"
+                fontSize="10"
                 fill="#8B9894"
               >
                 {item.date}
@@ -1448,7 +1227,7 @@ function TrendChart() {
                 14
               )}
               textAnchor="middle"
-              fontSize="8"
+              fontSize="11"
               fontWeight="700"
               fill="#087B51"
             >
@@ -1467,18 +1246,18 @@ function TrendChart() {
 
           <span className="h-1.5 w-1.5 rounded-full bg-[#08A66B]" />
 
-          <span className="text-[7px] text-[#75847E] sm:text-[8px]">
+          <span className="text-[10px] text-[#75847E] sm:text-[11px]">
             Current SEO Health
           </span>
 
-          <span className="text-[8px] font-bold text-[#253A33] sm:text-[9px]">
+          <span className="text-[11px] font-bold text-[#253A33] sm:text-[12px]">
             {latestScore}
           </span>
 
         </div>
 
         <div
-          className={`text-[7px] font-semibold sm:text-[8px] ${
+          className={`text-[10px] font-semibold sm:text-[11px] ${
             change >= 0
               ? "text-[#07945F]"
               : "text-[#DC4B48]"
@@ -1506,7 +1285,7 @@ function HealthCard({
   return (
     <div className="rounded-lg border border-[#E4E9E7] bg-white p-3">
 
-      <div className="text-[11px] font-bold text-[#1B2C27]">
+      <div className="text-[14px] font-bold text-[#1B2C27]">
         Overall SEO Health
       </div>
 
@@ -1520,15 +1299,15 @@ function HealthCard({
 
         <div className="min-w-0">
 
-          <div className="text-[9px] leading-3 text-[#60716B]">
+          <div className="text-[12px] leading-4 text-[#60716B]">
             Your website is in great shape! Keep it up.
           </div>
 
-          <div className="mt-2 text-[10px] font-bold text-[#07945F]">
+          <div className="mt-2 text-[13px] font-bold text-[#07945F]">
             ↑ 5 points
           </div>
 
-          <div className="text-[8px] text-[#73817C]">
+          <div className="text-[11px] text-[#73817C]">
             since last audit
           </div>
 
@@ -1596,11 +1375,11 @@ function TopIssuesCard({ onOpenIssues }) {
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
 
         <div className="min-w-0">
-          <h2 className="text-[11px] font-bold tracking-[-0.1px] text-[#182A25]">
+          <h2 className="text-[14px] font-bold tracking-[-0.1px] text-[#182A25]">
             Top Issues by Severity
           </h2>
 
-          <p className="mt-0.5 text-[7px] text-[#7B8984]">
+          <p className="mt-0.5 text-[10px] text-[#7B8984]">
             Most important SEO issues found during your latest audit.
           </p>
         </div>
@@ -1608,7 +1387,7 @@ function TopIssuesCard({ onOpenIssues }) {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="h-7 min-w-[125px] rounded-md border border-[#DDE5E1] bg-white px-2 text-[7px] font-medium text-[#435650] outline-none transition hover:border-[#08A66B] focus:border-[#08A66B]"
+          className="h-7 min-w-[125px] rounded-md border border-[#DDE5E1] bg-white px-2 text-[10px] font-medium text-[#435650] outline-none transition hover:border-[#08A66B] focus:border-[#08A66B]"
         >
           {categories.map((item) => (
             <option key={item} value={item}>
@@ -1627,7 +1406,7 @@ function TopIssuesCard({ onOpenIssues }) {
 
         {/* TABLE HEADER */}
         <div
-          className="grid items-center bg-[#FAFCFC] px-2.5 py-2 text-[7px] font-semibold text-[#667872]"
+          className="grid items-center bg-[#FAFCFC] px-2.5 py-2 text-[10px] font-semibold text-[#667872]"
           style={{
             gridTemplateColumns:
               "0.35fr 1.8fr 1fr 0.85fr 0.8fr 0.7fr",
@@ -1656,7 +1435,7 @@ const affectedPages =
           return (
             <div
               key={item.id}
-              className="grid min-h-[28px] items-center border-t border-[#EDF1EF] px-2.5 py-1.5 text-[7.5px] text-[#4C5F58] transition hover:bg-[#F8FBF9]"
+              className="grid min-h-[28px] items-center border-t border-[#EDF1EF] px-2.5 py-1.5 text-[10.5px] text-[#4C5F58] transition hover:bg-[#F8FBF9]"
               style={{
                 gridTemplateColumns:
                   "0.35fr 1.8fr 1fr 0.85fr 0.8fr 0.7fr",
@@ -1702,7 +1481,7 @@ const affectedPages =
 
               {/* SEVERITY */}
               <span
-                className={`w-fit rounded-full px-2 py-[3px] text-[6.5px] font-semibold ${getSeverityStyle(
+                className={`w-fit rounded-full px-2 py-[3px] text-[9.5px] font-semibold ${getSeverityStyle(
                   item.severity
                 )}`}
               >
@@ -1722,7 +1501,7 @@ const affectedPages =
                 <button
                   type="button"
                   onClick={onOpenIssues}
-                  className="flex h-[22px] items-center gap-1 rounded-md border border-[#DDE6E2] bg-white px-2 text-[7px] font-semibold text-[#435650] transition hover:border-[#08A66B] hover:bg-[#F1FAF6] hover:text-[#07945F]"
+                  className="flex h-[22px] items-center gap-1 rounded-md border border-[#DDE6E2] bg-white px-2 text-[10px] font-semibold text-[#435650] transition hover:border-[#08A66B] hover:bg-[#F1FAF6] hover:text-[#07945F]"
                 >
                   View
                   <Icon
@@ -1740,7 +1519,7 @@ const affectedPages =
 
         {/* EMPTY STATE */}
         {filteredIssues.length === 0 && (
-          <div className="py-8 text-center text-[8px] text-[#7B8984]">
+          <div className="py-8 text-center text-[11px] text-[#7B8984]">
             No issues found for this category.
           </div>
         )}
@@ -1768,7 +1547,7 @@ const affectedPages =
               {/* TOP */}
               <div className="flex items-start gap-2">
 
-                <span className="pt-1 text-[7px] text-[#89958F]">
+                <span className="pt-1 text-[10px] text-[#89958F]">
                   {index + 1}
                 </span>
 
@@ -1789,18 +1568,18 @@ const affectedPages =
 
                 <div className="min-w-0 flex-1">
 
-                  <div className="text-[8px] font-semibold text-[#30443C]">
+                  <div className="text-[11px] font-semibold text-[#30443C]">
                     {item.title}
                   </div>
 
-                  <div className="mt-0.5 text-[7px] text-[#7B8984]">
+                  <div className="mt-0.5 text-[10px] text-[#7B8984]">
                     {item.category}
                   </div>
 
                 </div>
 
                 <span
-                  className={`rounded-full px-2 py-1 text-[6.5px] font-semibold ${getSeverityStyle(
+                  className={`rounded-full px-2 py-1 text-[9.5px] font-semibold ${getSeverityStyle(
                     item.severity
                   )}`}
                 >
@@ -1813,7 +1592,7 @@ const affectedPages =
               {/* BOTTOM */}
               <div className="mt-2 flex items-center justify-between border-t border-[#EDF1EF] pt-2">
 
-                <span className="text-[7px] text-[#7B8984]">
+                <span className="text-[10px] text-[#7B8984]">
                   Affected Pages:
                   <span className="ml-1 font-semibold text-[#435650]">
                     {affectedPages}
@@ -1823,7 +1602,7 @@ const affectedPages =
                 <button
                   type="button"
                   onClick={onOpenIssues}
-                  className="flex items-center gap-1 text-[7px] font-semibold text-[#07945F]"
+                  className="flex items-center gap-1 text-[10px] font-semibold text-[#07945F]"
                 >
                   View
                   <Icon
@@ -1846,7 +1625,7 @@ const affectedPages =
       ===================================================== */}
       <div className="mt-2 flex items-center justify-between border-t border-[#EDF1EF] pt-2">
 
-        <span className="text-[7px] text-[#89958F]">
+        <span className="text-[10px] text-[#89958F]">
           Showing {filteredIssues.length} of{" "}
           {issueData.length} issues
         </span>
@@ -1854,7 +1633,7 @@ const affectedPages =
         <button
           type="button"
           onClick={onOpenIssues}
-          className="text-[7px] font-semibold text-[#07945F] transition hover:text-[#057C50]"
+          className="text-[10px] font-semibold text-[#07945F] transition hover:text-[#057C50]"
         >
           View All Issues →
         </button>
@@ -1878,11 +1657,11 @@ function PagesOverviewPreview({
       <div className="mb-2 flex items-center justify-between">
 
         <div>
-          <h2 className="text-[11px] font-bold text-[#1B2C27]">
+          <h2 className="text-[14px] font-bold text-[#1B2C27]">
             Pages Overview
           </h2>
 
-          <p className="text-[7px] text-[#7B8984]">
+          <p className="text-[10px] text-[#7B8984]">
             Top pages with issues.
           </p>
         </div>
@@ -1890,7 +1669,7 @@ function PagesOverviewPreview({
         <button
           type="button"
           onClick={onOpenPages}
-          className="text-[8px] font-semibold text-[#07945F]"
+          className="text-[11px] font-semibold text-[#07945F]"
         >
           View All →
         </button>
@@ -1902,7 +1681,7 @@ function PagesOverviewPreview({
         <div className="min-w-[760px]">
 
           <div
-            className="grid bg-[#FAFCFC] px-2 py-1.5 text-[7px] font-semibold text-[#667872]"
+            className="grid bg-[#FAFCFC] px-2 py-1.5 text-[10px] font-semibold text-[#667872]"
             style={{
               gridTemplateColumns:
                 ".3fr 1.5fr .65fr .65fr .7fr 1fr .5fr",
@@ -1923,7 +1702,7 @@ function PagesOverviewPreview({
             (page) => (
               <div
                 key={page.id}
-                className="grid items-center border-t border-[#EEF1F0] px-2 py-1.5 text-[7px] text-[#42554E]"
+                className="grid items-center border-t border-[#EEF1F0] px-2 py-1.5 text-[10px] text-[#42554E]"
                 style={{
                   gridTemplateColumns:
                     ".3fr 1.5fr .65fr .65fr .7fr 1fr .5fr",
@@ -1938,7 +1717,7 @@ function PagesOverviewPreview({
                     {page.url}
                   </span>
 
-                  <span className="rounded-full bg-[#EDF4F1] px-1.5 py-0.5 text-[6px] text-[#688079]">
+                  <span className="rounded-full bg-[#EDF4F1] px-1.5 py-0.5 text-[9px] text-[#688079]">
                     {page.type}
                   </span>
 
@@ -2078,16 +1857,16 @@ function SummaryPage({
           <div className="flex items-start justify-between">
 
             <div>
-              <h2 className="text-[11px] font-bold text-[#1B2C27]">
+              <h2 className="text-[14px] font-bold text-[#1B2C27]">
                 SEO Health Trend
               </h2>
 
-              <p className="text-[7px] text-[#7B8984]">
+              <p className="text-[10px] text-[#7B8984]">
                 Your website's health score over time.
               </p>
             </div>
 
-            <select className="rounded-md border border-[#DFE6E3] bg-white px-2 py-1 text-[7px] text-[#60716B] outline-none">
+            <select className="rounded-md border border-[#DFE6E3] bg-white px-2 py-1 text-[10px] text-[#60716B] outline-none">
               <option>Last 30 days</option>
               <option>Last 90 days</option>
               <option>Last 6 months</option>
@@ -2142,7 +1921,7 @@ function SearchBox({
           onChange(e.target.value)
         }
         placeholder={placeholder}
-        className="w-full bg-transparent text-[8px] outline-none"
+        className="w-full bg-transparent text-[11px] outline-none"
       />
 
     </label>
@@ -2165,7 +1944,7 @@ function Select({
       onChange={(e) =>
         onChange(e.target.value)
       }
-      className="h-7 rounded-md border border-[#DFE6E3] bg-white px-2 text-[8px] text-[#60716B] outline-none"
+      className="h-7 rounded-md border border-[#DFE6E3] bg-white px-2 text-[11px] text-[#60716B] outline-none"
     >
       {options.map((option) => (
         <option
@@ -2200,7 +1979,7 @@ function Severity({
 
   return (
     <span
-      className={`w-fit rounded-full px-2 py-1 text-[7px] font-semibold ${
+      className={`w-fit rounded-full px-2 py-1 text-[10px] font-semibold ${
         classes[value] ||
         classes.Low
       }`}
@@ -2229,7 +2008,7 @@ function Impact({
 
   return (
     <span
-      className={`w-fit rounded-full px-2 py-1 text-[7px] font-semibold ${
+      className={`w-fit rounded-full px-2 py-1 text-[10px] font-semibold ${
         classes[value] ||
         classes.Low
       }`}
@@ -2248,7 +2027,7 @@ function PageType({
   value,
 }) {
   return (
-    <span className="w-fit rounded-full bg-[#EDF4F1] px-2 py-1 text-[7px] font-medium text-[#60756D]">
+    <span className="w-fit rounded-full bg-[#EDF4F1] px-2 py-1 text-[10px] font-medium text-[#60756D]">
       {value}
     </span>
   );
@@ -2275,7 +2054,7 @@ function Pagination({
   }
 
   return (
-    <div className="mt-3 flex items-center justify-between text-[7px] text-[#7C8A85]">
+    <div className="mt-3 flex items-center justify-between text-[10px] text-[#7C8A85]">
 
       <span>
         Page {page} of {totalPages}
@@ -2448,11 +2227,11 @@ function IssuesPage({
 
           <div>
 
-            <h1 className="text-[18px] font-bold tracking-[-0.3px] text-[#172722]">
+            <h1 className="text-[20px] font-bold tracking-[-0.3px] text-[#172722]">
               Top Issues to Fix
             </h1>
 
-            <p className="mt-0.5 text-[8px] text-[#71807A]">
+            <p className="mt-0.5 text-[11px] text-[#71807A]">
               Detailed list of SEO issues found on your website.
             </p>
 
@@ -2581,7 +2360,7 @@ function IssuesPage({
           <div className="min-w-[1050px]">
 
             <div
-              className="grid bg-[#FAFCFC] px-2 py-2 text-[7px] font-semibold text-[#667872]"
+              className="grid bg-[#FAFCFC] px-2 py-2 text-[10px] font-semibold text-[#667872]"
               style={{
                 gridTemplateColumns:
                   ".3fr .1fr 1.5fr 1fr 1.15fr .75fr .7fr .7fr .55fr",
@@ -2602,7 +2381,7 @@ function IssuesPage({
               (item) => (
                 <div
                   key={item.id}
-                  className="grid items-center border-t border-[#EDF1EF] px-2 py-2 text-[8px] text-[#53645E]"
+                  className="grid items-center border-t border-[#EDF1EF] px-2 py-2 text-[11px] text-[#53645E]"
                   style={{
                     gridTemplateColumns:
                       ".3fr .1fr 1.5fr 1fr 1.15fr .75fr .7fr .7fr .55fr",
@@ -2640,7 +2419,7 @@ function IssuesPage({
                     value={item.impact}
                   />
 
-                  <span className="rounded-full bg-[#FFF5E5] px-2 py-1 text-[7px] font-semibold text-[#D18F14]">
+                  <span className="rounded-full bg-[#FFF5E5] px-2 py-1 text-[10px] font-semibold text-[#D18F14]">
                     {item.status}
                   </span>
 
@@ -2660,7 +2439,7 @@ function IssuesPage({
 
             {visibleIssues.length ===
               0 && (
-              <div className="px-4 py-10 text-center text-[9px] text-[#7C8A85]">
+              <div className="px-4 py-10 text-center text-[12px] text-[#7C8A85]">
                 No issues found for the selected filters.
               </div>
             )}
@@ -2822,11 +2601,11 @@ function PagesPage({
 
           <div>
 
-            <h1 className="text-[18px] font-bold tracking-[-0.3px] text-[#172722]">
+            <h1 className="text-[20px] font-bold tracking-[-0.3px] text-[#172722]">
               Pages Overview
             </h1>
 
-            <p className="mt-0.5 text-[8px] text-[#71807A]">
+            <p className="mt-0.5 text-[11px] text-[#71807A]">
               All crawled pages with SEO metrics and issues.
             </p>
 
@@ -2965,7 +2744,7 @@ function PagesPage({
           <div className="min-w-[950px]">
 
             <div
-              className="grid bg-[#FAFCFC] px-2 py-2 text-[7px] font-semibold text-[#667872]"
+              className="grid bg-[#FAFCFC] px-2 py-2 text-[10px] font-semibold text-[#667872]"
               style={{
                 gridTemplateColumns:
                   ".3fr 1.5fr .75fr .65fr .75fr .75fr 1fr .55fr",
@@ -2985,7 +2764,7 @@ function PagesPage({
               (item) => (
                 <div
                   key={item.id}
-                  className="grid items-center border-t border-[#EDF1EF] px-2 py-2 text-[8px] text-[#53645E]"
+                  className="grid items-center border-t border-[#EDF1EF] px-2 py-2 text-[11px] text-[#53645E]"
                   style={{
                     gridTemplateColumns:
                       ".3fr 1.5fr .75fr .65fr .75fr .75fr 1fr .55fr",
@@ -3077,11 +2856,11 @@ function GenericAuditPage({
       <div className="flex items-start justify-between">
 
         <div>
-          <h2 className="text-[13px] font-bold text-[#1B2C27]">
+          <h2 className="text-[15px] font-bold text-[#1B2C27]">
             {title}
           </h2>
 
-          <p className="mt-0.5 text-[8px] text-[#7B8984]">
+          <p className="mt-0.5 text-[11px] text-[#7B8984]">
             {description}
           </p>
         </div>
@@ -3116,17 +2895,17 @@ function GenericAuditPage({
                   />
                 </span>
 
-                <span className="text-[9px] font-semibold text-[#344740]">
+                <span className="text-[12px] font-semibold text-[#344740]">
                   {item.name}
                 </span>
 
               </div>
 
-              <div className="mt-2 text-[17px] font-bold text-[#16231F]">
+              <div className="mt-2 text-[18px] font-bold text-[#16231F]">
                 {item.value}
               </div>
 
-              <div className="mt-0.5 text-[7px] text-[#7B8984]">
+              <div className="mt-0.5 text-[10px] text-[#7B8984]">
                 {item.note}
               </div>
 
@@ -3161,11 +2940,11 @@ function IssueModal({
         <div className="flex items-center justify-between border-b border-[#E8ECEA] px-4 py-3">
 
           <div>
-            <div className="text-[12px] font-bold text-[#1B2C27]">
+            <div className="text-[14px] font-bold text-[#1B2C27]">
               Issue Details
             </div>
 
-            <div className="mt-0.5 text-[8px] text-[#7B8984]">
+            <div className="mt-0.5 text-[11px] text-[#7B8984]">
               Website audit finding
             </div>
           </div>
@@ -3186,11 +2965,11 @@ function IssueModal({
         <div className="space-y-3 p-4">
 
           <div>
-            <div className="text-[13px] font-bold text-[#1B2C27]">
+            <div className="text-[15px] font-bold text-[#1B2C27]">
               {issue.title}
             </div>
 
-            <div className="mt-1 text-[9px] text-[#71807A]">
+            <div className="mt-1 text-[12px] text-[#71807A]">
               {issue.affected}
             </div>
           </div>
@@ -3198,16 +2977,16 @@ function IssueModal({
           <div className="grid grid-cols-2 gap-2">
 
             <div className="rounded-md bg-[#F7FAF9] p-3">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Category
               </div>
-              <div className="mt-1 text-[9px] font-semibold text-[#344740]">
+              <div className="mt-1 text-[12px] font-semibold text-[#344740]">
                 {issue.category}
               </div>
             </div>
 
             <div className="rounded-md bg-[#F7FAF9] p-3">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Severity
               </div>
               <div className="mt-1">
@@ -3218,16 +2997,16 @@ function IssueModal({
             </div>
 
             <div className="rounded-md bg-[#F7FAF9] p-3">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Page
               </div>
-              <div className="mt-1 text-[9px] font-semibold text-[#315F7D]">
+              <div className="mt-1 text-[12px] font-semibold text-[#315F7D]">
                 {issue.pageUrl}
               </div>
             </div>
 
             <div className="rounded-md bg-[#F7FAF9] p-3">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Impact
               </div>
               <div className="mt-1">
@@ -3252,11 +3031,11 @@ function IssueModal({
 
               <div>
 
-                <div className="text-[9px] font-bold text-[#244239]">
+                <div className="text-[12px] font-bold text-[#244239]">
                   Recommended Action
                 </div>
 
-                <p className="mt-1 text-[8px] leading-4 text-[#60716B]">
+                <p className="mt-1 text-[11px] leading-4 text-[#60716B]">
                   Review the affected page and make the recommended SEO improvement. Re-run the audit after making the change to verify the result.
                 </p>
 
@@ -3281,7 +3060,7 @@ function IssueModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md bg-[#08A66B] px-4 py-2 text-[8px] font-semibold text-white hover:bg-[#07945F]"
+            className="rounded-md bg-[#08A66B] px-4 py-2 text-[11px] font-semibold text-white hover:bg-[#07945F]"
           >
             Mark as Resolved
           </button>
@@ -3315,11 +3094,11 @@ function PageModal({
         <div className="flex items-center justify-between border-b border-[#E8ECEA] px-4 py-3">
 
           <div>
-            <div className="text-[12px] font-bold text-[#1B2C27]">
+            <div className="text-[14px] font-bold text-[#1B2C27]">
               Page Details
             </div>
 
-            <div className="mt-0.5 text-[8px] text-[#7B8984]">
+            <div className="mt-0.5 text-[11px] text-[#7B8984]">
               SEO page audit information
             </div>
           </div>
@@ -3341,11 +3120,11 @@ function PageModal({
 
           <div className="rounded-md bg-[#F4F8F6] p-3">
 
-            <div className="text-[7px] text-[#7B8984]">
+            <div className="text-[10px] text-[#7B8984]">
               Page URL
             </div>
 
-            <div className="mt-1 break-all text-[10px] font-semibold text-[#315F7D]">
+            <div className="mt-1 break-all text-[13px] font-semibold text-[#315F7D]">
               {page.url}
             </div>
 
@@ -3354,31 +3133,31 @@ function PageModal({
           <div className="grid grid-cols-3 gap-2">
 
             <div className="rounded-md border border-[#E5EBE8] p-3 text-center">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Health
               </div>
 
-              <div className="mt-1 text-[16px] font-bold text-[#16231F]">
+              <div className="mt-1 text-[17px] font-bold text-[#16231F]">
                 {page.health}
               </div>
             </div>
 
             <div className="rounded-md border border-[#E5EBE8] p-3 text-center">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Speed
               </div>
 
-              <div className="mt-1 text-[16px] font-bold text-[#16231F]">
+              <div className="mt-1 text-[17px] font-bold text-[#16231F]">
                 {page.speed}
               </div>
             </div>
 
             <div className="rounded-md border border-[#E5EBE8] p-3 text-center">
-              <div className="text-[7px] text-[#7B8984]">
+              <div className="text-[10px] text-[#7B8984]">
                 Issues
               </div>
 
-              <div className="mt-1 text-[16px] font-bold text-[#DC4B48]">
+              <div className="mt-1 text-[17px] font-bold text-[#DC4B48]">
                 {page.issues}
               </div>
             </div>
@@ -3389,7 +3168,7 @@ function PageModal({
 
             <div className="flex items-center justify-between">
 
-              <span className="text-[8px] text-[#7B8984]">
+              <span className="text-[11px] text-[#7B8984]">
                 Page Type
               </span>
 
@@ -3401,11 +3180,11 @@ function PageModal({
 
             <div className="mt-2 flex items-center justify-between">
 
-              <span className="text-[8px] text-[#7B8984]">
+              <span className="text-[11px] text-[#7B8984]">
                 Last Checked
               </span>
 
-              <span className="text-[8px] font-semibold text-[#344740]">
+              <span className="text-[11px] font-semibold text-[#344740]">
                 {page.date}
               </span>
 
@@ -3420,7 +3199,7 @@ function PageModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md bg-[#08A66B] px-4 py-2 text-[8px] font-semibold text-white hover:bg-[#07945F]"
+            className="rounded-md bg-[#08A66B] px-4 py-2 text-[11px] font-semibold text-white hover:bg-[#07945F]"
           >
             Close
           </button>
@@ -3469,7 +3248,7 @@ function SitemapModal({
 
         <div className="flex items-center justify-between border-b border-[#E8ECEA] px-4 py-3">
 
-          <div className="text-[12px] font-bold text-[#1B2C27]">
+          <div className="text-[14px] font-bold text-[#1B2C27]">
             Sitemap
           </div>
 
@@ -3488,20 +3267,20 @@ function SitemapModal({
 
         <div className="p-4">
 
-          <p className="text-[8px] leading-4 text-[#71807A]">
+          <p className="text-[11px] leading-4 text-[#71807A]">
             Your website sitemap is expected at the following location:
           </p>
 
           <div className="mt-3 flex items-center gap-2 rounded-md border border-[#DDE6E2] bg-[#F7FAF9] p-2">
 
-            <span className="min-w-0 flex-1 truncate text-[8px] text-[#315F7D]">
+            <span className="min-w-0 flex-1 truncate text-[11px] text-[#315F7D]">
               {sitemapUrl}
             </span>
 
             <button
               type="button"
               onClick={copySitemap}
-              className="rounded-md bg-[#08A66B] px-3 py-1.5 text-[8px] font-semibold text-white hover:bg-[#07945F]"
+              className="rounded-md bg-[#08A66B] px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-[#07945F]"
             >
               Copy
             </button>
@@ -4129,11 +3908,7 @@ export default function WebsiteAudit() {
   ======================================================= */
 
   return (
-    <div className="min-h-screen bg-[#F4F7F6] text-[#1B2C27]">
-
-      <Sidebar
-        active="Website Audit"
-      />
+    <div className="text-[#1B2C27]">
 
       <TopBar
         url={url}
@@ -4141,13 +3916,13 @@ export default function WebsiteAudit() {
         onRunAudit={runAudit}
       />
 
-      <main className="lg:ml-[184px]">
+      <main>
 
         <div className="mx-auto max-w-[1400px] px-3 pb-6 pt-3">
 
           {/* Notification */}
           {notice && (
-            <div className="fixed right-4 top-[68px] z-[120] rounded-md bg-[#003E35] px-3 py-2 text-[9px] font-semibold text-white shadow-lg">
+            <div className="fixed right-4 top-[68px] z-[120] rounded-md bg-[#003E35] px-3 py-2 text-[12px] font-semibold text-white shadow-lg">
               {notice}
             </div>
           )}
@@ -4176,7 +3951,7 @@ export default function WebsiteAudit() {
 
               <div>
 
-                <h1 className="text-[18px] font-bold tracking-[-0.3px] text-[#172722]">
+                <h1 className="text-[20px] font-bold tracking-[-0.3px] text-[#172722]">
 
                   {pageView ===
                   "issues"
@@ -4188,7 +3963,7 @@ export default function WebsiteAudit() {
 
                 </h1>
 
-                <p className="mt-0.5 text-[8px] text-[#71807A]">
+                <p className="mt-0.5 text-[11px] text-[#71807A]">
 
                   {pageView ===
                   "issues"
@@ -4204,7 +3979,7 @@ export default function WebsiteAudit() {
 
             </div>
 
-            <div className="flex items-center gap-2 text-[7px] text-[#7A8883]">
+            <div className="flex items-center gap-2 text-[10px] text-[#7A8883]">
 
               <span>
                 Last audited{" "}
@@ -4314,7 +4089,7 @@ export default function WebsiteAudit() {
                           "Issues CSV downloaded."
                         );
                       }}
-                      className="block w-full px-3 py-2 text-left text-[8px] text-[#52645D] hover:bg-[#F5F8F7]"
+                      className="block w-full px-3 py-2 text-left text-[11px] text-[#52645D] hover:bg-[#F5F8F7]"
                     >
                       Export Issues CSV
                     </button>
@@ -4335,7 +4110,7 @@ export default function WebsiteAudit() {
                           "Pages CSV downloaded."
                         );
                       }}
-                      className="block w-full px-3 py-2 text-left text-[8px] text-[#52645D] hover:bg-[#F5F8F7]"
+                      className="block w-full px-3 py-2 text-left text-[11px] text-[#52645D] hover:bg-[#F5F8F7]"
                     >
                       Export Pages CSV
                     </button>
@@ -4349,7 +4124,7 @@ export default function WebsiteAudit() {
                           false
                         );
                       }}
-                      className="block w-full px-3 py-2 text-left text-[8px] text-[#52645D] hover:bg-[#F5F8F7]"
+                      className="block w-full px-3 py-2 text-left text-[11px] text-[#52645D] hover:bg-[#F5F8F7]"
                     >
                       Print Report
                     </button>
@@ -4382,7 +4157,7 @@ export default function WebsiteAudit() {
                     onClick={() =>
                       openTab(tab)
                     }
-                    className={`relative h-8 whitespace-nowrap text-[8px] font-semibold ${
+                    className={`relative h-8 whitespace-nowrap text-[11px] font-semibold ${
                       selected
                         ? "text-[#07945F]"
                         : "text-[#667872]"
@@ -4414,11 +4189,11 @@ export default function WebsiteAudit() {
 
                   <div className="mx-auto flex h-10 w-10 animate-spin items-center justify-center rounded-full border-4 border-[#DDEBE5] border-t-[#08A66B]" />
 
-                  <div className="mt-3 text-[11px] font-bold text-[#1B2C27]">
+                  <div className="mt-3 text-[14px] font-bold text-[#1B2C27]">
                     Running Website Audit
                   </div>
 
-                  <div className="mt-1 text-[8px] text-[#7B8984]">
+                  <div className="mt-1 text-[11px] text-[#7B8984]">
                     Crawling pages and checking SEO signals...
                   </div>
 
@@ -4482,7 +4257,7 @@ export default function WebsiteAudit() {
           border-radius: 6px;
           background: #FFFFFF;
           color: #435650;
-          font-size: 8px;
+          font-size: 11px;
           font-weight: 600;
           white-space: nowrap;
           transition: all .15s ease;
@@ -4503,7 +4278,7 @@ export default function WebsiteAudit() {
           border-radius: 4px;
           background: #FFFFFF;
           color: #667872;
-          font-size: 7px;
+          font-size: 10px;
         }
 
         .page-btn:hover {

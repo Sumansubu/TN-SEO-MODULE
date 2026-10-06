@@ -2,50 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
 import { getGoogleConfig } from "../services/authService.js";
+import BrandMark from "../components/BrandLogo.jsx";
 import dashboardImage from "../assets/final dashboard.png";
 
 /* =========================
    ICONS
 ========================= */
-
-function LogoIcon() {
-  return (
-    <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
-      <circle
-        cx="21"
-        cy="21"
-        r="18"
-        stroke="#16A66A"
-        strokeWidth="3"
-      />
-      <path
-        d="M12 28L29 11"
-        stroke="#16A66A"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M22 11H29V18"
-        stroke="#16A66A"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13 17C15 13.5 18 11.5 21 11"
-        stroke="#16A66A"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 24C12 27 14 29 17 30"
-        stroke="#16A66A"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function CheckIcon() {
   return (
@@ -222,7 +184,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { login, register, signInWithGoogle } = useAuth();
+  const { isAuthenticated, login, register, signInWithGoogle } = useAuth();
 
   const [isSignup, setIsSignup] = useState(
     searchParams.get("mode") === "signup"
@@ -252,11 +214,26 @@ function Login() {
       (location.state?.loggedOut ? "You have been logged out successfully." : "")
   );
 
-  /* Where to go after authenticating (deep link, otherwise landing page). */
+  /* Where to go after authenticating (deep link, otherwise dashboard). */
   const destination = (() => {
     const from = location.state?.from;
-    return from && !from.startsWith("/login") ? from : "/";
+    return from && !from.startsWith("/login") ? from : "/dashboard";
   })();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(destination, { replace: true });
+    }
+  }, [isAuthenticated, destination, navigate]);
+
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    if (mode === "signup") {
+      setIsSignup(true);
+    } else if (mode === "login") {
+      setIsSignup(false);
+    }
+  }, [searchParams]);
 
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
@@ -385,9 +362,10 @@ function Login() {
     setError("");
     setSuccess("");
 
-    const email = formData.email.trim();
+    const email = formData.email.trim().toLowerCase();
+    const password = formData.password.trim();
 
-    if (!email || !formData.password) {
+    if (!email || !password) {
       setError("Please enter your email and password.");
       return;
     }
@@ -402,7 +380,7 @@ function Login() {
 
       await login({
         email,
-        password: formData.password,
+        password,
         rememberMe,
       });
 
@@ -427,9 +405,11 @@ function Login() {
     setSuccess("");
 
     const name = formData.name.trim();
-    const email = formData.email.trim();
+    const email = formData.email.trim().toLowerCase();
+    const password = formData.password.trim();
+    const confirmPassword = formData.confirmPassword.trim();
 
-    if (!name || !email || !formData.password || !formData.confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
@@ -439,14 +419,14 @@ function Login() {
       return;
     }
 
-    if (!PASSWORD_PATTERN.test(formData.password)) {
+    if (!PASSWORD_PATTERN.test(password)) {
       setError(
         "Password must be at least 8 characters and include at least one letter and one number."
       );
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
@@ -462,8 +442,8 @@ function Login() {
       await register({
         fullName: name,
         email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
+        password,
+        confirmPassword,
       });
 
       navigate(destination, { replace: true });
@@ -484,6 +464,11 @@ function Login() {
     setIsSignup(signupMode);
     setError("");
     setSuccess("");
+    setFormData((prev) => ({
+      ...prev,
+      password: "",
+      confirmPassword: "",
+    }));
 
     if (searchParams.get("mode")) {
       setSearchParams({}, { replace: true });
@@ -517,7 +502,7 @@ function Login() {
               onClick={() => navigate("/")}
               className="mb-12 flex items-center gap-3 text-left"
             >
-              <LogoIcon />
+              <BrandMark size={42} />
 
               <div>
                 <div className="text-[27px] font-extrabold leading-none tracking-[-1.5px] text-[#111820]">
@@ -627,7 +612,7 @@ function Login() {
               onClick={() => navigate("/")}
               className="mb-7 flex items-center gap-3 text-left lg:hidden"
             >
-              <LogoIcon />
+              <BrandMark size={42} />
 
               <div>
                 <div className="text-[22px] font-extrabold leading-none tracking-[-1.2px] text-[#111820]">

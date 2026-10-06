@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Home } from "lucide-react";
 
 import KeywordRankings from "./Keywordrankings.jsx";
 import SerpFeatures from "./Serpfeatures.jsx";
@@ -489,7 +487,7 @@ const SerpIcon = () => (
 /* ---------- overview ---------- */
 const Overview = () => (
   <>
-    <div className="mt-3 grid grid-cols-5 gap-2.5">
+    <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
       {stats.map((s) => (
         <Card
           key={s.label}
@@ -529,14 +527,14 @@ const Overview = () => (
       ))}
     </div>
 
-    <div className="mt-3 grid grid-cols-[1fr_320px] gap-2.5">
+    <div className="mt-3 grid grid-cols-1 gap-2.5 xl:grid-cols-[1fr_320px]">
       <Card className="p-3">
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <h3 className="text-[13px] font-bold">
             Ranking Performance
           </h3>
 
-          <div className="ml-10 flex items-center gap-4 whitespace-nowrap text-[10px]">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 whitespace-nowrap text-[10px] xl:mt-0 xl:ml-10">
             {[
               ["Top 3", G],
               ["Top 10", B],
@@ -587,7 +585,7 @@ const Overview = () => (
                   style={{ background: c }}
                 />
 
-                <span className="w-[42px] text-gray-700">
+                <span className="min-w-[42px] text-gray-700">
                   {l}
                 </span>
 
@@ -602,11 +600,11 @@ const Overview = () => (
     </div>
 
     {/* ---------- KEYWORD RANKINGS + SERP ---------- */}
-    <div className="mt-3 grid grid-cols-[1fr_320px] gap-2.5">
+    <div className="mt-3 grid grid-cols-1 gap-2.5 xl:grid-cols-[1fr_320px]">
 
       {/* ---------- KEYWORD RANKINGS ---------- */}
       <Card className="p-3">
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-[18px] font-bold leading-tight">
             Keyword Rankings{" "}
             <span className="text-[12px] font-normal text-gray-500">
@@ -623,7 +621,7 @@ const Overview = () => (
           </button>
         </div>
 
-        <div className="w-full overflow-hidden">
+        <div className="w-full overflow-x-auto">
           <table className="mt-2 w-full whitespace-nowrap text-left text-[13px]">
             <thead>
               <tr className="bg-gray-50 text-[12px] font-bold text-gray-700">
@@ -926,8 +924,6 @@ const Overview = () => (
 
 /* ---------- page ---------- */
 export default function RankTracking() {
-  const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState("Overview");
 
   const tabs = [
@@ -938,11 +934,6 @@ export default function RankTracking() {
     "Location & Devices",
   ];
 
-  /* ---------- Home button ---------- */
-  const handleHome = () => {
-    navigate("/");
-  };
-
   return (
     <div className="min-h-screen w-full bg-[#f4f6f8] px-4 py-3 font-sans text-gray-900">
       <div className="w-full">
@@ -950,23 +941,9 @@ export default function RankTracking() {
         {/* ---------- Top bar ---------- */}
         <div className="flex items-center gap-3">
 
-          {/* HOME BUTTON */}
-          <button
-            type="button"
-            onClick={handleHome}
-            title="Home"
-            aria-label="Home"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:bg-gray-50 hover:text-green-700"
-          >
-            <Home
-              size={18}
-              strokeWidth={1.8}
-            />
-          </button>
-
           {/* SEARCH + TRACK CONTAINER */}
-          <div className="flex w-fit max-w-[620px] shrink-0 items-center">
-            <div className="flex h-8 w-[360px] items-center rounded-l-lg border border-r-0 border-gray-200 bg-white px-3 text-[10px] text-gray-500">
+          <div className="flex w-full max-w-[620px] min-w-0 flex-1 items-center">
+            <div className="flex h-8 min-w-0 flex-1 items-center truncate rounded-l-lg border border-r-0 border-gray-200 bg-white px-3 text-[10px] text-gray-500">
               Enter a domain or keyword to track (e.g. example.com)
             </div>
 
@@ -978,7 +955,7 @@ export default function RankTracking() {
         </div>
 
         {/* ---------- Page heading ---------- */}
-        <div className="mt-3 flex items-start justify-between">
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-[26px] font-extrabold leading-tight tracking-tight">
               Rank Tracking
@@ -989,7 +966,7 @@ export default function RankTracking() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
 
             <div className="flex h-9 min-w-[170px] items-center gap-2 whitespace-nowrap rounded-lg border border-gray-200 bg-white px-3 text-[11px]">
               <span className="font-bold text-blue-500">

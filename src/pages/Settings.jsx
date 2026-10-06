@@ -1,17 +1,10 @@
 import { useState } from "react";
 
-import {
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-
 import "../styles/tn-seo-pages.css";
 
 import {
   Activity,
   ArrowRight,
-  ArrowLeft,
-  ArrowUpRight,
   BarChart3,
   Bell,
   Building2,
@@ -20,80 +13,14 @@ import {
   ChevronDown,
   CreditCard,
   FileText,
-  FolderKanban,
-  Home,
   Link2,
-  Menu,
   Puzzle,
-  Search,
   Settings,
   Shield,
   SlidersHorizontal,
   Sparkles,
   User,
-  Users,
 } from "lucide-react";
-
-const sidebarItems = [
-  {
-    name: "Dashboard",
-    icon: Home,
-    to: "/dashboard",
-  },
-  {
-    name: "Projects",
-    icon: FolderKanban,
-    to: "/projects",
-  },
-  {
-    name: "Website Audit",
-    icon: Shield,
-  },
-  {
-    name: "Keyword Research",
-    icon: Search,
-  },
-  {
-    name: "Technical SEO",
-    icon: SlidersHorizontal,
-    to: "/technical-seo",
-  },
-  {
-    name: "Content / AI Writer",
-    icon: FileText,
-    to: "/content",
-  },
-  {
-    name: "On-Page SEO",
-    icon: FileText,
-    to: "/on-page-seo",
-  },
-  {
-    name: "Backlink Analysis",
-    icon: Link2,
-    to: "/backlinks",
-  },
-  {
-    name: "Rank Tracking",
-    icon: Activity,
-    to: "/rank-tracking",
-  },
-  {
-    name: "Competitor Analysis",
-    icon: Users,
-    to: "/competitor-analysis",
-  },
-  {
-    name: "Reports",
-    icon: FileText,
-    to: "/reports",
-  },
-  {
-    name: "Settings",
-    icon: Settings,
-    to: "/settings",
-  },
-];
 
 const tabs = [
   {
@@ -117,175 +44,6 @@ const tabs = [
     icon: CreditCard,
   },
 ];
-
-function Logo() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="logo-ring">
-        <ArrowUpRight className="logo-arrow" strokeWidth={3} />
-      </div>
-
-      <div className="leading-tight">
-        <div className="text-[20px] font-bold tracking-tight text-white">
-          TN SEO
-          <sup className="ml-0.5 text-[8px]">®</sup>
-        </div>
-
-        <div className="text-[15px] font-medium tracking-[1px] text-white/90">
-          MODULE
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Sidebar({ mobileOpen, setMobileOpen }) {
-  const [activeItem, setActiveItem] = useState("Settings");
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  return (
-    <>
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`desktop-sidebar ${
-          mobileOpen ? "mobile-open" : ""
-        } fixed left-0 top-0 z-50 flex h-screen w-[205px] flex-col bg-[#003b35] text-white transition-transform duration-300 md:translate-x-0`}
-      >
-        {/* Logo */}
-        <div className="px-4 pb-5 pt-4">
-          <Logo />
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-2.5">
-          {sidebarItems.map((item) => {
-            const Icon = item.icon;
-            const active = item.to
-              ? location.pathname === item.to
-              : activeItem === item.name;
-
-            return (
-              <button
-                key={item.name}
-                onClick={() => {
-                  if (item.to) {
-                    navigate(item.to);
-                  } else {
-                    setActiveItem(item.name);
-                  }
-                  setMobileOpen(false);
-                }}
-                className={`mb-1 flex w-full items-center gap-3 rounded-lg px-3 py-[10px] text-left text-[14px] transition ${
-                  active
-                    ? "bg-[#07965b] font-semibold shadow-sm"
-                    : "text-white/95 hover:bg-white/10"
-                }`}
-              >
-                <Icon size={20} strokeWidth={1.9} />
-                <span>{item.name}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-  
-        {/* User */}
-        
-      </aside>
-    </>
-  );
-}
-
-function Topbar({ setMobileOpen }) {
-  const [searchValue, setSearchValue] = useState("");
-
-  const navigate = useNavigate();
-
-  return (
-    <header className="sticky top-0 z-30 flex h-[63px] items-center border-b border-slate-200 bg-white/95 px-4 backdrop-blur md:ml-[205px] md:px-7">
-      <button
-        className="mr-3 rounded-lg p-2 hover:bg-slate-100 md:hidden"
-        onClick={() => setMobileOpen(true)}
-      >
-        <Menu size={22} />
-      </button>
-      {/* Back to Home */}
-
-<button
-  type="button"
-  onClick={() => navigate("/")}
-  className="
-    flex
-    h-10
-    items-center
-    gap-4
-    rounded-lg
-    border
-    border-slate-200
-    bg-white
-    px-6
-    text-sm
-    font-semibold
-    text-slate-700
-    hover:bg-slate-50
-    mr-8
-  "
->
-  <ArrowLeft
-    size={17}
-  />
-
-  Back to Home
-
-</button>
-
-      <div className="relative w-full max-w-[505px] mr-8">
-        <Search
-          size={17}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
-        />
-
-        <input
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Search settings, integrations, or any option..."
-          className="h-[40px] w-full rounded-lg border border-slate-200 bg-white pl-10 pr-20 text-[13px] text-slate-700 shadow-sm placeholder:text-slate-400"
-        />
-      </div>
-
-      <div className="ml-auto flex items-center gap-5">
-        <button className="relative rounded-lg p-2 hover:bg-slate-100">
-          <Bell size={21} />
-          <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-red-500" />
-        </button>
-
-        <div className="flex items-center gap-3">
-          <div className="hidden h-10 w-10 items-center justify-center rounded-full bg-[#003b35] text-white sm:flex">
-            U
-          </div>
-
-          <div className="hidden leading-tight sm:block">
-            <div className="text-[13px] text-slate-600">
-              Good Evening,
-            </div>
-
-            <div className="text-[14px] font-bold text-slate-900">
-              Utsav 
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 function SectionHeader({
   icon: Icon,
@@ -374,7 +132,7 @@ function ProfileCard() {
   };
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
       <SectionHeader
         icon={User}
         title="Profile Settings"
@@ -460,7 +218,7 @@ function ProfileCard() {
 
 function AccountOverview() {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-2 shadow-card md:p-[18px] h-[300px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-2 shadow-card md:p-[18px] h-[300px]">
       <SectionHeader
         icon={BarChart3}
         title="Account Overview"
@@ -536,7 +294,7 @@ function CompanyCard() {
   const [industry, setIndustry] = useState("IT Services");
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
       <SectionHeader
         icon={Building2}
         title="Company Information"
@@ -603,7 +361,7 @@ function IntegrationsCard() {
   };
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
       <SectionHeader
         icon={Link2}
         title="Integrations"
@@ -754,7 +512,7 @@ function NotificationsCard() {
   ];
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
       <SectionHeader
         icon={Bell}
         title="Notifications"
@@ -790,7 +548,7 @@ function SecurityCard() {
   };
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
       <SectionHeader
         icon={Shield}
         title="Security"
@@ -848,7 +606,7 @@ function SecurityBanner() {
   const [enabled, setEnabled] = useState(false);
 
   return (
-    <section className="security-banner flex flex-col gap-4 rounded-xl border border-[#bdeed8] bg-[#effcf7] p-4 shadow-sm sm:flex-row sm:items-center md:px-6 md:py-4">
+    <section className="min-w-0 security-banner flex flex-col gap-4 rounded-xl border border-[#bdeed8] bg-[#effcf7] p-4 shadow-sm sm:flex-row sm:items-center md:px-6 md:py-4">
       <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-[#003b35]">
         <Shield size={40} strokeWidth={2.2} />
       </div>
@@ -928,7 +686,7 @@ function SecurityBanner() {
     <div className="grid gap-4 lg:grid-cols-[1.55fr_0.85fr]">
 
       {/* LEFT SIDE */}
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+      <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
         <SectionHeader
           icon={Building2}
@@ -1053,7 +811,7 @@ function SecurityBanner() {
       <div className="space-y-4">
 
         {/* Brand Preview */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={Sparkles}
@@ -1091,7 +849,7 @@ function SecurityBanner() {
 
 
         {/* Company Preferences */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={SlidersHorizontal}
@@ -1225,7 +983,7 @@ function IntegrationsPage() {
   ];
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+    <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
       <SectionHeader
         icon={Link2}
@@ -1365,7 +1123,7 @@ function NotificationsPage() {
     <div className="grid gap-4 lg:grid-cols-[1.35fr_0.85fr]">
 
       {/* Notification Preferences */}
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+      <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
         <SectionHeader
           icon={Bell}
@@ -1429,7 +1187,7 @@ function NotificationsPage() {
       <div className="space-y-4">
 
         {/* Email Notifications */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={FileText}
@@ -1471,7 +1229,7 @@ function NotificationsPage() {
 
 
         {/* Instant Notifications */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={Sparkles}
@@ -1523,7 +1281,7 @@ function BillingPage() {
       <div className="grid gap-4 lg:grid-cols-[1.55fr_0.85fr]">
 
         {/* Current Plan */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={CreditCard}
@@ -1581,7 +1339,7 @@ function BillingPage() {
 
 
         {/* Usage Overview */}
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+        <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
           <SectionHeader
             icon={BarChart3}
@@ -1620,7 +1378,7 @@ function BillingPage() {
 
 
       {/* Available Plans */}
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+      <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
         <SectionHeader
           icon={Sparkles}
@@ -1754,7 +1512,7 @@ function BillingPage() {
 
 
       {/* Payment History */}
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
+      <section className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-card md:p-[18px]">
 
         <SectionHeader
           icon={CreditCard}
@@ -1824,19 +1582,11 @@ function BillingPage() {
   );
 }
 function App() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Profile");
 
   return (
-    <div className="min-h-screen bg-[#f7fafc]">
-      <Sidebar
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-      />
-
-      <Topbar setMobileOpen={setMobileOpen} />
-
-      <main className="md:ml-[205px]">
+    <div>
+      <main>
         <div className="mx-auto max-w-[1040px] px-4 py-5 md:px-6 md:py-5 lg:px-7">
           {/* Page heading */}
           <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

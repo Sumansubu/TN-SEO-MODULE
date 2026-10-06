@@ -7,14 +7,10 @@ import {
   useState
 } from "react";
 
-import { useNavigate } from "react-router-dom";
-
-import AppSidebar from "../components/AppSidebar";
+import BrandMark from "../components/BrandLogo.jsx";
 
 import {
-ArrowLeft,
 ArrowRight,
-Bell,
   CalendarDays,
   Check,
   ChevronDown,
@@ -23,7 +19,6 @@ Bell,
   FileText,
   Globe2,
   Info,
-  Menu,
   MoreHorizontal,
   Plus,
   Search,
@@ -84,16 +79,6 @@ const keywordData = [
 ===================================================== */
 
 export default function Reports() {
-
-  const navigate =
-    useNavigate();
-
-
-  /* Sidebar */
-
-  const [sidebarOpen, setSidebarOpen] =
-    useState(false);
-
 
   /* Domains */
 
@@ -652,28 +637,13 @@ ${item.date}
 
   return (
 
-    <div className="min-h-screen bg-[#f7fafc]">
-
-      {/* ================================================
-          SIDEBAR
-      ================================================= */}
-
-      <AppSidebar
-        mobileOpen={sidebarOpen}
-        setMobileOpen={setSidebarOpen}
-        onSelect={notify}
-      />
-
+    <div>
 
       {/* ================================================
           MAIN
       ================================================= */}
 
-      <main
-        className="
-          lg:pl-[228px]
-        "
-      >
+      <main>
 
         {/* ==============================================
             HEADER
@@ -701,60 +671,6 @@ ${item.date}
               gap-3
             "
           >
-
-            {/* Mobile Menu */}
-
-            <button
-              className="
-                rounded-lg
-                border
-                border-slate-200
-                p-2
-                lg:hidden
-              "
-
-              onClick={() =>
-                setSidebarOpen(true)
-              }
-            >
-
-              <Menu
-                size={20}
-              />
-
-            </button>
-            
-            {/* Back to Home */}
-
-<button
-  type="button"
-  onClick={() => navigate("/")}
-  className="
-    hidden
-    h-10
-    items-center
-    gap-2
-    rounded-lg
-    border
-    border-slate-200
-    bg-white
-    px-6
-    text-sm
-    font-semibold
-    text-slate-700
-    hover:bg-slate-50
-    sm:flex
-    mr-5
-  "
->
-  <ArrowLeft
-    size={17}
-  />
-
-  Back to Home
-
-</button>
-
 
             {/* Search */}
 
@@ -807,7 +723,8 @@ ${item.date}
 
                 className="
                   h-11
-                  w-[450px]
+                  w-full
+                  min-w-0
                   rounded-lg
                   border
                   border-slate-200
@@ -882,96 +799,6 @@ ${item.date}
 
             </button>
 
-
-            {/* Notification */}
-
-            <button
-
-              onClick={() =>
-                notify(
-                  "You have 1 new notification"
-                )
-              }
-
-              className="
-                relative
-                hidden
-                h-10
-                w-10
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-slate-200
-                sm:flex
-              "
-            >
-
-              <Bell
-                size={20}
-              />
-
-              <span
-                className="
-                  absolute
-                  right-2
-                  top-2
-                  h-2
-                  w-2
-                  rounded-full
-                  bg-red-500
-                "
-              />
-
-            </button>
-
-
-            {/* User */}
-
-            <div
-              className="
-                hidden
-                items-center
-                gap-3
-                md:flex
-              "
-            >
-
-              <div
-                className="
-                  flex
-                  h-10
-                  w-10
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-[#003b35]
-                  font-bold
-                  text-white
-                "
-              >
-                U
-              </div>
-
-
-              <div
-                className="
-                  text-sm
-                  leading-5
-                "
-              >
-
-                <div>
-                  Good Evening,
-                </div>
-
-                <strong>
-                  Utsav 👋
-                </strong>
-
-              </div>
-
-            </div>
 
           </div>
 
@@ -2027,18 +1854,10 @@ ${item.date}
                     "
                   >
 
-                    <div
-                      className="
-                        brand-mark
-                        report-mark
-                      "
-                    >
-
-                      <ArrowRight
-                        size={22}
-                      />
-
-                    </div>
+                    <BrandMark
+                      size={38}
+                      className="shrink-0"
+                    />
 
 
                     <div>

@@ -1,12 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout.jsx";
-import ProtectedRoute, { GuestOnlyRoute } from "./components/ProtectedRoute.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 // ==============================
 // Pages
 // ==============================
 import Dashboard from "./pages/Dashboard.jsx";
+import Notifications from "./pages/Notifications.jsx";
 import CompetitorAnalysis from "./pages/CompetitorAnalysis.jsx";
 import OnPageSeo from "./pages/OnPageSeo.jsx";
 import Upgrade from "./pages/Upgrade.jsx";
@@ -66,11 +67,9 @@ export default function App() {
         <Routes>
             {/* Public */}
             <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route element={<GuestOnlyRoute />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-            </Route>
 
             {/* ==========================================
                 AUTHENTICATED APP SHELL
@@ -220,19 +219,25 @@ export default function App() {
                         element={<Upgrade />}
                     />
 
-                </Route>
-            </Route>
+                    {/* ==========================================
+                        NOTIFICATIONS
+                    =========================================== */}
+                    <Route
+                        path="/notifications"
+                        element={<Notifications />}
+                    />
 
-            {/* ==========================================
-                STANDALONE PAGES (own sidebar shell, login required)
-                Projects / Reports / Settings / Website Audit / Keyword Research
-            =========================================== */}
-            <Route element={<ProtectedRoute />}>
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/website-audit" element={<WebsiteAudit />} />
-                <Route path="/keyword-research" element={<KeywordResearch />} />
+                    {/* ==========================================
+                        PROJECTS / REPORTS / SETTINGS /
+                        WEBSITE AUDIT / KEYWORD RESEARCH
+                    =========================================== */}
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/website-audit" element={<WebsiteAudit />} />
+                    <Route path="/keyword-research" element={<KeywordResearch />} />
+
+                </Route>
             </Route>
 
             <Route path="/landing" element={<Navigate to="/" replace />} />

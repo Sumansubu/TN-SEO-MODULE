@@ -2,10 +2,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth.js";
 import {
     ArrowRight,
-    ArrowUpRight,
     FileBarChart,
     FileText,
     FileCheck2,
+    FolderKanban,
     Home,
     Link2,
     Search,
@@ -16,9 +16,11 @@ import {
     ClipboardCheck,
 } from "lucide-react";
 import { BRAND, SIDEBAR_UPGRADE, SIDEBAR_USER } from "../data/site.js";
+import BrandMark from "./BrandLogo.jsx";
 
 const ICONS = {
     home: Home,
+    "folder-kanban": FolderKanban,
     "clipboard-check": ClipboardCheck,
     search: Search,
     "settings-2": Settings2,
@@ -34,7 +36,7 @@ const ICONS = {
     "rank-tracking": Search,
 };
 
-export default function Sidebar({ items }) {
+export default function Sidebar({ items, open = false, onClose }) {
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -63,20 +65,22 @@ export default function Sidebar({ items }) {
     });
 
     return (
-        <aside className="fixed inset-y-0 left-0 z-40 flex w-[172px] min-w-[172px] flex-col bg-sidebar text-white">
+        <aside
+            className={`fixed inset-y-0 left-0 z-40 flex w-[172px] min-w-[172px] flex-col bg-sidebar text-white transition-transform duration-200 ease-out ${
+                open
+                    ? "translate-x-0 shadow-2xl"
+                    : "-translate-x-full"
+            } lg:translate-x-0`}
+        >
 
             {/* BRAND */}
             <NavLink
                 to="/"
                 title="Back to home"
+                onClick={onClose}
                 className="flex h-[67px] items-center border-b border-white/10 px-4 transition-opacity hover:opacity-80"
             >
-                <div className="mr-2 flex h-9 w-9 items-center justify-center rounded-full bg-mint text-primary-dark">
-                    <ArrowUpRight
-                        className="h-5 w-5"
-                        strokeWidth={2.4}
-                    />
-                </div>
+                <BrandMark size={36} className="mr-2 shrink-0" />
 
                 <div>
                     <h2 className="text-[13px] leading-4 tracking-wide">
@@ -93,7 +97,7 @@ export default function Sidebar({ items }) {
             </NavLink>
 
             {/* NAVIGATION */}
-            <nav className="flex-1 overflow-y-auto p-2.5">
+            <nav className="flex-1 overflow-y-auto p-2.5 scrollbar-none">
                 {navItems.map(({ to, label, icon, end }) => {
 
                     // Navigation paths
@@ -110,6 +114,7 @@ export default function Sidebar({ items }) {
                             key={label}
                             to={resolvedTo}
                             end={end}
+                            onClick={onClose}
                             className={({ isActive }) =>
                                 "mb-1 flex h-10 items-center gap-2.5 rounded-md px-3 text-[11px] transition " +
                                 (isActive
